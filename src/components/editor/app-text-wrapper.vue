@@ -7,13 +7,13 @@
     <template v-for="(word, j) in data" :key="j">
       <template v-if="isTagged(j)">
         <template v-if="data[j].isSingle">
-          <app-mark>
+          <app-mark @click="$emit('delete-tag', j)">
             <app-word :text="word.text" :tag="data[j]" :data-id="j" />
             <app-inline-tag :text="word.name" />
           </app-mark>
         </template>
         <template v-else>
-          <app-mark>
+          <app-mark @click="$emit('delete-tag', j)">
             <app-word
               v-for="(subword, y) in data[j]"
               :key="y"

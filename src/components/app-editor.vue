@@ -21,7 +21,11 @@
           :is-active="currentTag.name === tag.name"
         />
       </div>
-      <app-text-wrapper @on-selected="onSelected" :data="data" />
+      <app-text-wrapper
+        @on-selected="onSelected"
+        @delete-tag="deleteTag"
+        :data="data"
+      />
     </div>
 
     <div class="flex space-x-2">
@@ -47,7 +51,7 @@ import AppTag from "@/components/editor/app-tag.vue";
 import { onMounted, reactive, ref, watch } from "vue";
 import AppBtn from "@/components/app-btn.vue";
 import { STORAGE_KEY } from "@/common/constants.ts";
-import { Tag } from "@/common/interfaces.ts";
+import { Tag, TaggedGroup } from "@/common/interfaces.ts";
 import clone from "lodash/clone";
 import {
   extendSelectionToWord,
@@ -59,12 +63,12 @@ import isObject from "lodash/isObject";
 import AppTextWrapper from "@/components/editor/app-text-wrapper.vue";
 import AppProgress from "@/components/editor/app-progress.vue";
 
-const currentTag = ref("");
+const currentTag = ref<Tag | {}>({});
 
-const availableTags = ref<Tag>([]);
-const data = ref([]);
-const rowId = ref<null | number>(null);
-let processedData: null | any[] = null;
+const availableTags = ref<Tag[]>([]);
+const data = ref<Array<TaggedGroup | string>>([]);
+const rowId = ref<number>(-1);
+let processedData: null | string[] = null;
 
 const isPrevLineAvailable = ref(false);
 const isNextLineAvailable = ref(false);
@@ -72,13 +76,12 @@ const isNextLineAvailable = ref(false);
 watch(
   () => rowId.value,
   () => {
-    isPrevLineAvailable.value =
-      getArrPrevKey(processedData, rowId.value) !== null;
-    isNextLineAvailable.value =
-      getArrNextKey(processedData, rowId.value) !== null;
-
-    console.log("WATCH rowId", rowId.value);
-    console.log(isPrevLineAvailable.value, isNextLineAvailable.value);
+    isPrevLineAvailable.value = processedData
+      ? getArrPrevKey(processedData, rowId.value) !== null
+      : false;
+    isNextLineAvailable.value = processedData
+      ? getArrNextKey(processedData, rowId.value) !== null
+      : false;
   },
 );
 
@@ -94,18 +97,18 @@ const onSelected = async () => {
   const endId = +sel?.focusNode?.parentElement?.dataset?.id;
 
   if (isOccupied(startId) || isOccupied(endId)) {
-    sel.empty();
+    sel?.empty();
     return;
   }
 
-  const sentenceData = {};
+  const sentenceData: Record<number, TaggedGroup> = {};
 
   if (startId === endId) {
     const i = startId;
     sentenceData[i] = clone(currentTag.value);
     sentenceData[i].range = [startId, endId];
     sentenceData[i].isSingle = startId === endId;
-    sentenceData[i].text = sel.toString();
+    sentenceData[i].text = sel?.toString() || "";
 
     data.value[i] = sentenceData[i];
   } else {
@@ -130,6 +133,18 @@ const onSelected = async () => {
 
   console.log(">>>", data.value);
   console.log(sentenceData);
+};
+
+const deleteTag = (e: number) => {
+  const group: TaggedGroup | string = data.value[e];
+  if (isObject(group) && group.isSingle) {
+    const wordId = group.range[0];
+    data.value[wordId] = group.text;
+  } else {
+    for (const wordId in group) {
+      data.value[wordId] = group[wordId].text;
+    }
+  }
 };
 
 const acceptLine = () => {
@@ -209,13 +224,14 @@ const processSourceData = () => {
 };
 
 onMounted(() => {
-  availableTags.value =
-    JSON.parse(localStorage.getItem(STORAGE_KEY.TAGS)) || [];
+  availableTags.value = JSON.parse(
+    localStorage.getItem(STORAGE_KEY.TAGS) || "[]",
+  );
   data.value = processSourceData();
   if (availableTags.value?.length) {
     currentTag.value = availableTags.value[0];
   }
-  rowId.value = rowId.value ?? 0;
+  rowId.value = 0;
 });
 </script>
 
