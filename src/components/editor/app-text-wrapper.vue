@@ -34,10 +34,13 @@ import isEmpty from "lodash/isEmpty";
 import AppMark from "@/components/editor/app-mark.vue";
 import AppWord from "@/components/editor/app-word.vue";
 import AppInlineTag from "@/components/editor/app-inline-tag.vue";
+import { isString } from "lodash";
 
-const props = defineProps<{ data: []; sentenceData: {} }>();
+const props = defineProps<{ data: [] }>();
 
-const isTagged = (i: number) => !isEmpty(props.sentenceData[i]);
+const isTagged = (i: number) => {
+  return !(isString(props.data[i]) || isEmpty(props.data[i]));
+};
 </script>
 <style lang="scss" scoped>
 // TODO: move to tailwind or vars

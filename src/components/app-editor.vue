@@ -1,6 +1,12 @@
 <template>
   <div>
     <h1>Attach tags</h1>
+    <app-progress
+      v-if="processedData?.length"
+      class="max-w-3xl"
+      :done="rowId + 1"
+      :total="processedData?.length"
+    />
     <div class="border max-w-3xl">
       <div
         v-if="availableTags?.length"
@@ -15,11 +21,7 @@
           :is-active="currentTag.name === tag.name"
         />
       </div>
-      <app-text-wrapper
-        @on-selected="onSelected"
-        :data="data"
-        :sentence-data="sentenceData"
-      />
+      <app-text-wrapper @on-selected="onSelected" :data="data" />
     </div>
 
     <div class="flex space-x-2">
@@ -55,12 +57,12 @@ import {
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
 import AppTextWrapper from "@/components/editor/app-text-wrapper.vue";
+import AppProgress from "@/components/editor/app-progress.vue";
 
 const currentTag = ref("");
 
 const availableTags = ref<Tag>([]);
 const data = ref([]);
-const sentenceData = reactive({});
 const rowId = ref<null | number>(null);
 let processedData: null | any[] = null;
 
@@ -81,7 +83,7 @@ watch(
 );
 
 const isOccupied = (i: number) => {
-  return isObject(data[i]) || undefined === data[i];
+  return isObject(data.value[i]) || undefined === data.value[i];
 };
 
 const onSelected = async () => {
@@ -96,6 +98,8 @@ const onSelected = async () => {
     return;
   }
 
+  const sentenceData = {};
+
   if (startId === endId) {
     const i = startId;
     sentenceData[i] = clone(currentTag.value);
@@ -103,7 +107,7 @@ const onSelected = async () => {
     sentenceData[i].isSingle = startId === endId;
     sentenceData[i].text = sel.toString();
 
-    data[i] = sentenceData[i];
+    data.value[i] = sentenceData[i];
   } else {
     const range = Array.from(
       { length: endId - startId + 1 },
@@ -116,70 +120,68 @@ const onSelected = async () => {
       sentenceData[startId][i].range = [startId, endId];
       sentenceData[startId][i].isSingle = startId === endId;
       sentenceData[startId][i].text = data.value[i];
-      delete data[i];
+      delete data.value[i];
     }
 
-    data[startId] = sentenceData[startId];
+    data.value[startId] = sentenceData[startId];
   }
 
   sel.empty();
 
   console.log(">>>", data.value);
   console.log(sentenceData);
-  console.log(data);
 };
 
 const acceptLine = () => {
   const savedData = JSON.parse(
     localStorage.getItem(STORAGE_KEY.TAGGED_DATA) || "{}",
   );
-  savedData[rowId.value] = data;
+  savedData[rowId.value] = data.value;
   localStorage.setItem(STORAGE_KEY.TAGGED_DATA, JSON.stringify(savedData));
-
-  console.log("accept?");
 
   editNextLine();
 };
 
 const editNextLine = () => {
-  console.log(
-    isNextLineAvailable.value,
-    getArrNextKey(processedData, rowId.value),
-  );
   if (isNextLineAvailable.value) {
     console.log("is next line avaiable: true", rowId.value);
     rowId.value = getArrNextKey(processedData, rowId.value);
     localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value);
 
-    console.log("new row", rowId.value);
-
-    if (!isEmpty(processedData[rowId.value])) {
-      data.value = processedData[rowId.value].split(" ");
-    }
+    loadData();
   }
 };
 
 const editPrevLine = () => {
-  console.log(
-    isPrevLineAvailable.value,
-    getArrPrevKey(processedData, rowId.value),
-  );
   if (isPrevLineAvailable.value) {
     console.log("is prev line avaiable: true", rowId.value);
     rowId.value = getArrPrevKey(processedData, rowId.value);
     localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value);
 
-    console.log("new row", rowId.value);
+    loadData();
+  }
+};
 
-    if (!isEmpty(processedData[rowId.value])) {
-      data.value = processedData[rowId.value].split(" ");
-    }
+const loadData = () => {
+  if (!isEmpty(processedData[rowId.value])) {
+    data.value = processedData[rowId.value].split(" ");
+  }
+
+  const taggedData = JSON.parse(
+    localStorage.getItem(STORAGE_KEY.TAGGED_DATA) || "{}",
+  );
+  if (!isEmpty(taggedData[rowId.value])) {
+    taggedData[rowId.value].forEach((element, index) => {
+      if (isEmpty(element)) {
+        delete taggedData[rowId.value][index];
+      }
+    });
+
+    data.value = taggedData[rowId.value];
   }
 };
 
 const processSourceData = () => {
-  if (localStorage.length) {
-  }
   processedData = JSON.parse(
     localStorage.getItem(STORAGE_KEY.PROCESSED_SOURCE),
   );
@@ -187,12 +189,23 @@ const processSourceData = () => {
   rowId.value = +localStorage.getItem(STORAGE_KEY.ROW_ID) || 0;
   localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value);
 
-  if (!isEmpty(processedData[rowId.value])) {
-    return processedData[rowId.value].split(" ");
+  const taggedData = JSON.parse(
+    localStorage.getItem(STORAGE_KEY.TAGGED_DATA) || "{}",
+  );
+  if (!isEmpty(taggedData[rowId.value])) {
+    taggedData[rowId.value].forEach((element, index) => {
+      if (isEmpty(element)) {
+        delete taggedData[rowId.value][index];
+      }
+    });
+
+    return taggedData[rowId.value];
   }
 
-  // TODO
-  return data[0].split(" ");
+  if (!isEmpty(processedData[rowId.value])) {
+    console.log("OK", processedData[rowId.value].split(" "));
+    return processedData[rowId.value].split(" ");
+  }
 };
 
 onMounted(() => {
