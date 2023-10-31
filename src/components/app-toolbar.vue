@@ -14,11 +14,12 @@
 import AppIconBtn from "./app-icon-btn.vue";
 import useMain from "@/store/use_main";
 import { SCREEN } from "@/common/screens.ts";
+import { csvExport } from "@/common/export.ts";
 
 const mainStore = useMain();
 
 const save = () => {
-  console.log("save to csv");
+  csvExport();
 };
 
 interface ToolbarButton {
