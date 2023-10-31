@@ -15,49 +15,25 @@
           :is-active="currentTag.name === tag.name"
         />
       </div>
-      <div
-        v-if="data?.length"
-        class="text-wrapper p-4 text-xl flex flex-wrap"
-        @mouseup="selected($event)"
-      >
-        <template v-for="(word, j) in data" :key="j">
-          <template v-if="isTagged(j)">
-            <template v-if="data[j].isSingle">
-              <app-mark>
-                <app-word :text="word.text" :tag="data[j]" :data-id="j" />
-                <app-inline-tag :text="word.name" />
-              </app-mark>
-            </template>
-            <template v-else>
-              <app-mark>
-                <app-word
-                  v-for="(subword, y) in data[j]"
-                  :key="y"
-                  :text="subword.text"
-                  :tag="data[j][y]"
-                  :data-id="y"
-                />
-                <app-inline-tag :text="data[j][j].name" />
-              </app-mark>
-            </template>
-          </template>
-          <app-word v-else :text="word" :tag="data[j]" :data-id="j" />
-        </template>
-      </div>
+      <app-text-wrapper
+        @on-selected="onSelected"
+        :data="data"
+        :sentence-data="sentenceData"
+      />
     </div>
 
     <div class="flex space-x-2">
       <app-btn
         @click="editPrevLine"
         text="Prev"
-        :disabled="isPrevLineAvailable"
+        :disabled="!isPrevLineAvailable"
         icon="fa-backward"
       />
       <app-btn @click="acceptLine" text="Accept" icon="fa-check" />
       <app-btn
         @click="editNextLine"
         text="Skip"
-        :disabled="isNextLineAvailable"
+        :disabled="!isNextLineAvailable"
         icon="fa-forward"
       />
     </div>
@@ -66,11 +42,10 @@
 
 <script setup lang="ts">
 import AppTag from "@/components/editor/app-tag.vue";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import AppBtn from "@/components/app-btn.vue";
 import { STORAGE_KEY } from "@/common/constants.ts";
 import { Tag } from "@/common/interfaces.ts";
-import AppWord from "@/components/editor/app-word.vue";
 import clone from "lodash/clone";
 import {
   extendSelectionToWord,
@@ -79,29 +54,37 @@ import {
 } from "@/common/helpers.ts";
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
-import AppInlineTag from "@/components/editor/app-inline-tag.vue";
-import AppMark from "@/components/editor/app-mark.vue";
+import AppTextWrapper from "@/components/editor/app-text-wrapper.vue";
 
 const currentTag = ref("");
 
 const availableTags = ref<Tag>([]);
-const source = ref([]);
-let data = [];
+const data = ref([]);
 const sentenceData = reactive({});
-let rowId = 0;
-let processedData: any[] = null;
+const rowId = ref<null | number>(null);
+let processedData: null | any[] = null;
 
-const isTagged = (i: number) => !isEmpty(sentenceData[i]);
+const isPrevLineAvailable = ref(false);
+const isNextLineAvailable = ref(false);
 
-const isPrevLineAvailable = () => !!getArrPrevKey(processedData, rowId);
+watch(
+  () => rowId.value,
+  () => {
+    isPrevLineAvailable.value =
+      getArrPrevKey(processedData, rowId.value) !== null;
+    isNextLineAvailable.value =
+      getArrNextKey(processedData, rowId.value) !== null;
 
-const isNextLineAvailable = () => !!getArrNextKey(processedData, rowId);
+    console.log("WATCH rowId", rowId.value);
+    console.log(isPrevLineAvailable.value, isNextLineAvailable.value);
+  },
+);
 
 const isOccupied = (i: number) => {
   return isObject(data[i]) || undefined === data[i];
 };
 
-const selected = async () => {
+const onSelected = async () => {
   await extendSelectionToWord();
 
   const sel = document.getSelection();
@@ -132,7 +115,7 @@ const selected = async () => {
       sentenceData[startId][i] = clone(currentTag.value);
       sentenceData[startId][i].range = [startId, endId];
       sentenceData[startId][i].isSingle = startId === endId;
-      sentenceData[startId][i].text = source.value[i];
+      sentenceData[startId][i].text = data.value[i];
       delete data[i];
     }
 
@@ -141,35 +124,55 @@ const selected = async () => {
 
   sel.empty();
 
-  console.log(">>>", source.value);
+  console.log(">>>", data.value);
   console.log(sentenceData);
   console.log(data);
 };
 
 const acceptLine = () => {
-  // save data
   const savedData = JSON.parse(
     localStorage.getItem(STORAGE_KEY.TAGGED_DATA) || "{}",
   );
-  savedData[rowId] = data;
+  savedData[rowId.value] = data;
   localStorage.setItem(STORAGE_KEY.TAGGED_DATA, JSON.stringify(savedData));
+
+  console.log("accept?");
 
   editNextLine();
 };
 
 const editNextLine = () => {
-  if (isNextLineAvailable()) {
-    console.log("is next line avaiable: true", rowId);
-    rowId = getArrNextKey(processedData, rowId);
-    localStorage.setItem(STORAGE_KEY.ROW_ID, rowId);
+  console.log(
+    isNextLineAvailable.value,
+    getArrNextKey(processedData, rowId.value),
+  );
+  if (isNextLineAvailable.value) {
+    console.log("is next line avaiable: true", rowId.value);
+    rowId.value = getArrNextKey(processedData, rowId.value);
+    localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value);
 
-    console.log("new row", rowId);
+    console.log("new row", rowId.value);
 
-    if (!isEmpty(processedData[rowId])) {
-      source.value = processedData[rowId].split(" ");
-      data = clone(source.value);
+    if (!isEmpty(processedData[rowId.value])) {
+      data.value = processedData[rowId.value].split(" ");
+    }
+  }
+};
 
-      console.log("done?");
+const editPrevLine = () => {
+  console.log(
+    isPrevLineAvailable.value,
+    getArrPrevKey(processedData, rowId.value),
+  );
+  if (isPrevLineAvailable.value) {
+    console.log("is prev line avaiable: true", rowId.value);
+    rowId.value = getArrPrevKey(processedData, rowId.value);
+    localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value);
+
+    console.log("new row", rowId.value);
+
+    if (!isEmpty(processedData[rowId.value])) {
+      data.value = processedData[rowId.value].split(" ");
     }
   }
 };
@@ -181,11 +184,11 @@ const processSourceData = () => {
     localStorage.getItem(STORAGE_KEY.PROCESSED_SOURCE),
   );
 
-  rowId = +localStorage.getItem(STORAGE_KEY.ROW_ID) || 0;
-  localStorage.setItem(STORAGE_KEY.ROW_ID, rowId);
+  rowId.value = +localStorage.getItem(STORAGE_KEY.ROW_ID) || 0;
+  localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value);
 
-  if (!isEmpty(processedData[rowId])) {
-    return processedData[rowId].split(" ");
+  if (!isEmpty(processedData[rowId.value])) {
+    return processedData[rowId.value].split(" ");
   }
 
   // TODO
@@ -195,13 +198,11 @@ const processSourceData = () => {
 onMounted(() => {
   availableTags.value =
     JSON.parse(localStorage.getItem(STORAGE_KEY.TAGS)) || [];
-  source.value = processSourceData();
-  data = clone(source.value);
+  data.value = processSourceData();
   if (availableTags.value?.length) {
     currentTag.value = availableTags.value[0];
   }
-
-  console.log("MM", source.value);
+  rowId.value = rowId.value ?? 0;
 });
 </script>
 

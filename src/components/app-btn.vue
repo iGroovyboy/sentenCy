@@ -1,7 +1,7 @@
 <template>
   <div :class="['', alignmentClass]">
     <button
-      @click="!disabled && $emit('click')"
+      @click.self="!disabled && $emit('click')"
       class="bg-amber-500 text-black p-2 px-6 mt-4"
       :class="{ disabled: disabled }"
     >

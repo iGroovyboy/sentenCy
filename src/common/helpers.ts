@@ -76,7 +76,7 @@ export const getNextItem = (map, prevKey) => {
 
 export const getArrNextKey = (arr: any[], currentId: number): number | null => {
   if (
-    arr.length &&
+    !isEmpty(arr) &&
     currentId !== -1 &&
     currentId < arr.length - 1 &&
     !isEmpty(arr[currentId + 1])
@@ -89,7 +89,7 @@ export const getArrNextKey = (arr: any[], currentId: number): number | null => {
 
 export const getArrPrevKey = (arr: any[], currentId: number): number | null => {
   if (
-    arr.length &&
+    !isEmpty(arr) &&
     currentId !== -1 &&
     currentId > 0 &&
     !isEmpty(arr[currentId - 1])
