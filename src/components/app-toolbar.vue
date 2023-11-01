@@ -1,5 +1,7 @@
 <template>
-  <div class="toolbar flex flex-col fixed w-16 h-screen top-0 p-2">
+  <div
+    class="toolbar bg-dark-200 flex flex-col fixed w-16 h-screen top-0 p-2 pt-5"
+  >
     <app-icon-btn
       v-for="btn in buttons"
       :key="btn.name"
@@ -54,7 +56,7 @@ const buttons: ToolbarButton[] = [
 </script>
 
 <style lang="scss" scoped>
-.toolbar {
-  background-color: #212120;
-}
+//.toolbar {
+//  background-color: #212120;
+//}
 </style>

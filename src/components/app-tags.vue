@@ -1,51 +1,53 @@
 <template>
   <h1>Edit tags</h1>
-  <app-dropzone text="Drop file or click to import tags" @load="importData" />
-  <div class="form">
-    <div class="input">
-      <span for="">Tag name*:</span>
-      <input
-        @keydown="tagChange($event)"
-        v-model="currentTag.name"
-        type="text"
-        ref="tagInput"
+  <div class="card">
+    <app-dropzone text="Drop file or click to import tags" @load="importData" />
+    <div class="form">
+      <div class="input group">
+        <span class="text-dark-60 group-hover:text-dark-50">Tag name*:</span>
+        <input
+          @keydown="tagChange($event)"
+          v-model="currentTag.name"
+          type="text"
+          ref="tagInput"
+        />
+      </div>
+      <div class="input group">
+        <span class="text-dark-60 group-hover:text-dark-50">Hotkey:</span>
+        <input
+          @keydown="hotkeyChange($event)"
+          v-model="currentTag.hotkey"
+          type="text"
+        />
+      </div>
+    </div>
+    <div class="flex space-x-2">
+      <app-btn v-if="canSaveTag" @click="saveTag" icon="fa-plus" text="Save" />
+      <app-btn v-else @click="add" icon="fa-plus" text="Add" />
+      <app-btn
+        @click="exportTagsJson"
+        text="Export"
+        icon="fa-download"
+        pos="end"
+        :disabled="!tags.length"
       />
     </div>
-    <div class="input">
-      <span for="">Hotkey:</span>
-      <input
-        @keydown="hotkeyChange($event)"
-        v-model="currentTag.hotkey"
-        type="text"
-      />
-    </div>
-  </div>
-  <div class="flex space-x-2">
-    <app-btn v-if="canSaveTag" @click="saveTag" icon="fa-plus" text="Save" />
-    <app-btn v-else @click="add" icon="fa-plus" text="Add" />
-    <app-btn
-      @click="exportTagsJson"
-      text="Export"
-      icon="fa-download"
-      pos="end"
-      :disabled="!tags.length"
-    />
-  </div>
 
-  <div
-    class="tags-list bgc-g mt-4 flex flex-row flex-wrap max-w-3xl border border-neutral-400 rounded-md"
-  >
-    <app-tag
-      @click="editTag(tag)"
-      @delete="deleteTag(tag)"
-      v-for="tag in tags"
-      :key="tag.name"
-      :text="tag.name"
-      :hotkey="tag.hotkey"
-      :is-active="currentTag.name === tag.name"
-    />
+    <div
+      class="tags-list mt-4 p-4 flex flex-row flex-wrap space-x-2 max-w-3xl border border-dark-60/60"
+    >
+      <app-tag
+        @click="editTag(tag)"
+        @delete="deleteTag(tag)"
+        v-for="tag in tags"
+        :key="tag.name"
+        :text="tag.name"
+        :hotkey="tag.hotkey"
+        :is-active="currentTag.name === tag.name"
+      />
+    </div>
+    <app-btn-next :nextScreen="SCREEN.EDITOR" :disabled="!tags.length" />
   </div>
-  <app-btn-next :nextScreen="SCREEN.EDITOR" :disabled="!tags.length" />
 </template>
 
 <script setup lang="ts">
@@ -162,7 +164,7 @@ onMounted(() => {
   }
 
   input {
-    @apply text-black p-2 px-4 uppercase;
+    @apply bg-transparent border font-bold text-dark-50 border-dark-70 hover:border-dark-60 focus-visible:border-amber-500 outline-0 p-2 px-4 uppercase;
   }
 }
 </style>

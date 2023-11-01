@@ -1,16 +1,23 @@
 <template>
-  <div>
-    <h1>Attach tags</h1>
+  <h1>Tag content</h1>
+  <div class="card">
+    <h2>
+      Progress: <span v-text="rowId + 1 + ' / ' + processedData?.length" />
+    </h2>
     <app-progress
       v-if="processedData?.length"
       class="max-w-3xl"
       :done="rowId + 1"
       :total="processedData?.length"
     />
-    <div class="border max-w-3xl">
+  </div>
+
+  <div class="card">
+    <h2>Assign tags</h2>
+    <div class="border border-dark-60/80 max-w-3xl">
       <div
         v-if="availableTags?.length"
-        class="title-wrapper w-full flex flex-row flex-wrap bg-blue-950"
+        class="title-wrapper w-full flex flex-row flex-wrap p-2"
       >
         <app-tag
           @click="currentTag = tag"
@@ -42,6 +49,10 @@
         :disabled="!isNextLineAvailable"
         icon="fa-forward"
       />
+    </div>
+    <div class="help">
+      <p>Click on word to select single word.</p>
+      <p>Select several words to assign group of words</p>
     </div>
   </div>
 </template>
@@ -235,9 +246,4 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" scoped>
-.text-wrapper {
-  background-color: #b7b7b7;
-  resize: vertical;
-}
-</style>
+<style lang="scss" scoped></style>

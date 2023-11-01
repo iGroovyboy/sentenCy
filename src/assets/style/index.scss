@@ -3,20 +3,22 @@
 @tailwind utilities;
 
 html {
-  background-color: #595959;
+  @apply bg-dark-500;
 }
 
 h1 {
-  color: white;
+  @apply text-dark-60;
   text-transform: uppercase;
   font-size: 1.5em;
   margin: 0 0 0.2em 0;
 }
 
-.bgc-g {
-  background-color: #b7b7b7;
+h2 {
+  @apply text-dark-50 font-bold;
+  font-size: 1.2em;
+  margin: 0 0 0.5em 0;
 }
 
-mark {
-  @apply bg-amber-300
+.card {
+  @apply  bg-dark-200 pl-8 pt-6 pb-8 pr-8 mb-8
 }

@@ -1,16 +1,20 @@
 <template>
   <div
-    class="bg-transparent text-black flex m-2 px-3 text-lg font-bold border rounded-md uppercase cursor-pointer"
+    class="bg-transparent text-dark-50 relative flex items-center px-3 text-lg border border-dark-60 rounded-full uppercase cursor-pointer"
     :class="{ active: isActive }"
   >
-    <div class="text" v-text="text" />
+    <div class="text-base font-bold" v-text="text" />
     <div
       v-if="hotkey.length"
-      class="hotkey text-sm text-white ml-1"
+      class="hotkey text-sm text-white ml-2 pl-2 border-l-2 border-white/20"
+      :class="{ activeSub: isActive }"
       v-text="hotkey"
     />
-    <div class="close ml-4" @click.stop="$emit('delete')">
-      <i class="fa fa-close"></i>
+    <div
+      class="close ml-2 min-w-[22px] text-right border-l-2 border-white/20"
+      @click.stop="$emit('delete')"
+    >
+      <i class="fa fa-close text-dark-50" :class="{ activeSub: isActive }"></i>
     </div>
   </div>
 </template>
@@ -21,6 +25,9 @@ defineProps<{ text: string; hotkey: string; isActive?: boolean }>();
 
 <style lang="scss" scoped>
 .active {
-  @apply text-white bg-blue-950 border-blue-950;
+  @apply text-dark-400 bg-amber-500/80 hover:bg-amber-500/100 border-transparent;
+}
+.activeSub {
+  @apply text-dark-400  border-transparent;
 }
 </style>

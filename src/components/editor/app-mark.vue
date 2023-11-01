@@ -1,8 +1,10 @@
 <template>
-  <mark class="bg-amber-300 cursor-pointer relative group">
+  <mark
+    class="relative mx-1 bg-amber-300/90 hover:bg-amber-300/100 cursor-pointer group transition-all"
+  >
     <slot></slot>
     <div
-      class="icon absolute top-[-2px] right-[-2px] bg-white w-4 h-4 rounded-full flex justify-center items-center opacity-0 group-hover:opacity-80"
+      class="icon absolute top-[-2px] right-[-2px] bg-white w-4 h-4 rounded-full flex justify-center items-center opacity-0 group-hover:opacity-80 transition-all"
     >
       <i class="fa fa-close text-center"></i>
     </div>

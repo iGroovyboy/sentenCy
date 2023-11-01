@@ -1,10 +1,12 @@
 <template>
-  <div class="progress flex w-full h-6 border border-amber-500 my-1 relative">
+  <div
+    class="progress flex w-full h-2 bg-dark-100 border border-dark-60 my-1 relative"
+  >
     <div class="bar bg-amber-500" />
-    <div
-      class="absolute leading-1 font-bold text-sm text-white text-shadow-1 ml-1"
-      v-text="details"
-    />
+    <!--    <div-->
+    <!--      class="absolute leading-1 font-bold text-sm text-white text-shadow-1 ml-1"-->
+    <!--      v-text="details"-->
+    <!--    />-->
   </div>
 </template>
 

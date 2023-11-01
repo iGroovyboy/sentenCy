@@ -1,9 +1,6 @@
 <template>
   <button class="mb-4">
-    <i
-      class="fa fa-2x text-stone-400"
-      :class="[icon, { active: isActive }]"
-    ></i>
+    <i class="fa fa-lg text-dark-50" :class="[icon, { active: isActive }]"></i>
   </button>
 </template>
 
@@ -17,6 +14,6 @@ const icon = computed(() => props.iconClass || "fa-bicycle");
 
 <style lang="scss" scoped>
 .active {
-  @apply text-amber-400;
+  @apply text-amber-500;
 }
 </style>

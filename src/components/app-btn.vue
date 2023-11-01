@@ -2,7 +2,7 @@
   <div :class="['', alignmentClass]">
     <button
       @click.self="!disabled && $emit('click')"
-      class="bg-amber-500 text-black p-2 px-6 mt-4"
+      class="bg-amber-500/80 hover:bg-amber-500/100 text-black p-2 px-6 mt-4 transition-all"
       :class="{ disabled: disabled }"
     >
       <span class="pr-2 uppercase" v-text="text" />

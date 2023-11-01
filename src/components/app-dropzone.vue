@@ -1,7 +1,7 @@
 <template>
   <div class="dropzone my-4" v-bind="getRootProps()">
     <div
-      class="bg-transparent border-2 border-amber-500 border-dashed text-amber-500 text-center p-2 px-6 mt-4"
+      class="bg-transparent border-2 border-amber-500 border-dashed text-amber-500 text-center p-2 px-6"
       :class="{ active: isDragActive }"
     >
       <input v-bind="getInputProps()" />

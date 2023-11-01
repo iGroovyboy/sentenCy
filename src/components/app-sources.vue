@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <h1>Source data</h1>
+  <h1>Source data</h1>
+  <div class="card">
     <app-dropzone text="Drop file or click to import" @load="importData" />
     <textarea
       v-model="data"
       @input="updateData"
-      class="w-full min-h-[400px]"
+      class="w-full min-h-[400px] bg-dark-200 border border-dark-70 hover:border-dark-60 outline-0 focus:border-amber-500 p-1 text-dark-50 transition-all"
       name="source"
     ></textarea>
     <div class="flex flex-row justify-between">
@@ -22,8 +22,6 @@ import AppDropzone from "@/components/app-dropzone.vue";
 import { onMounted, ref } from "vue";
 import { STORAGE_KEY } from "@/common/constants.ts";
 import AppBtn from "@/components/app-btn.vue";
-import { incrStringVersion, jenkinsHash } from "@/common/helpers.ts";
-import isEmpty from "lodash/isEmpty";
 
 const data = ref("");
 
@@ -53,8 +51,4 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" scoped>
-textarea {
-  background-color: #b7b7b7;
-}
-</style>
+<style lang="scss" scoped></style>
