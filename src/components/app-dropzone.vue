@@ -1,10 +1,15 @@
 <template>
-  <div class="dropzone my-4" v-bind="getRootProps()">
+  <div
+    class="dropzone my-4"
+    v-bind="getRootProps()"
+    :aria-label="'Drop zone: ' + text"
+    role="button"
+  >
     <div
       class="bg-transparent border-2 border-amber-500 border-dashed text-amber-500 text-center p-2 px-6"
       :class="{ active: isDragActive }"
     >
-      <input v-bind="getInputProps()" />
+      <input v-bind="getInputProps()" aria-hidden="true" />
       <p v-text="text"></p>
     </div>
   </div>

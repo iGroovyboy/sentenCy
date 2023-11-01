@@ -3,6 +3,9 @@
     v-if="data?.length"
     class="text-wrapper p-4 text-xl flex flex-wrap bg-dark-50/80 text-dark-500"
     @mouseup="$emit('onSelected')"
+    aria-label="Container for clickable and selectable words"
+    role="main"
+    tabindex="0"
   >
     <template v-for="(word, j) in data" :key="j">
       <template v-if="isTagged(j)">

@@ -1,6 +1,6 @@
 <template>
   <h1>Edit tags</h1>
-  <section class="card">
+  <section class="card" v-resizable.br>
     <aside>
       <app-dropzone
         text="Drop file or click to import tags"
@@ -15,6 +15,9 @@
           v-model="currentTag.name"
           type="text"
           ref="tagInput"
+          required
+          aria-required="true"
+          aria-label="Tag name"
         />
       </div>
       <div class="input group">
@@ -23,6 +26,7 @@
           @keydown="hotkeyChange($event)"
           v-model="currentTag.hotkey"
           type="text"
+          aria-label="Tag hotkey"
         />
       </div>
       <div class="flex gap-x-2 items-center mt-4">
@@ -57,6 +61,8 @@
     </div>
     <div
       class="tags-list mt-4 p-4 flex flex-row flex-wrap gap-x-2 border border-dark-60/60"
+      aria-label="List of tags"
+      role="radiogroup"
     >
       <app-tag
         @click="editTag(tag)"
@@ -88,6 +94,7 @@ import AppBtnNext from "@/components/app-btn-next.vue";
 import { STORAGE_KEY } from "@/common/constants.ts";
 import AppDivider from "@/components/app-divider.vue";
 import { openWindowWithBlob } from "@/common/helpers.ts";
+import { Tag } from "@/common/interfaces.ts";
 
 const currentTag = reactive<Tag | {}>({
   name: "",

@@ -8,15 +8,18 @@
       v-if="processedData?.length"
       :done="rowId + 1"
       :total="processedData?.length"
+      aria-hidden="true"
     />
   </section>
 
-  <section class="card">
+  <section class="card" v-resizable.br>
     <h2>Assign tags</h2>
     <div class="border border border-dark-60/60">
       <div
         v-if="availableTags?.length"
         class="title-wrapper w-full flex flex-row flex-wrap space-x-2 p-4"
+        aria-label="List of available tags"
+        role="radiogroup"
       >
         <app-tag
           @click="currentTag = tag"
@@ -35,7 +38,11 @@
       />
     </div>
 
-    <div class="flex gap-x-2 mt-2">
+    <div
+      class="flex gap-x-2 mt-2"
+      aria-label="Navigate thru text lines"
+      role="navigation"
+    >
       <app-btn
         @click="editPrevLine"
         text="Prev"
@@ -61,6 +68,10 @@
       <div>
         <p>Single click on a word to tag single word.</p>
         <p>Drag-select several words to tag them.</p>
+        <p>
+          Click once on existing <mark class="bg-dark-50">mark</mark> to remove
+          it.
+        </p>
       </div>
     </aside>
   </section>

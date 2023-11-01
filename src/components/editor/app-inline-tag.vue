@@ -1,5 +1,10 @@
 <template>
-  <span class="uppercase mx-2 text-blue-500 font-bold" v-text="text" />
+  <span
+    class="uppercase mx-2 text-blue-500 font-bold"
+    v-text="text"
+    aria-label="tag"
+    role="presentation"
+  />
 </template>
 
 <script setup lang="ts">

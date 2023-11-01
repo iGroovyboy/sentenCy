@@ -2504,6 +2504,11 @@ uuidv4@3.0.1:
   dependencies:
     uuid "3.3.2"
 
+v-resizable@^0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/v-resizable/-/v-resizable-0.0.14.tgz#942ecd515a22040f95a843d27a1400e7663ff7ff"
+  integrity sha512-vL5BZMsgJsTAfuIhKNfJlCi5POwWE3fhXzQ5X5UA5y5T33FRK4qXy5kq5pFySwx3fDuCD05CX2b61508ckgVKg==
+
 varname@2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/varname/-/varname-2.0.3.tgz#05e8dc64fbb6e59170de44aad4ddeab8ab87b68e"

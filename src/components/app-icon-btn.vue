@@ -3,6 +3,7 @@
     <i
       class="fa fa-lg text-dark-50 hover:text-white/60 active:text-white/70 transition-all"
       :class="[icon, { active: isActive }]"
+      aria-hidden="true"
     ></i>
   </button>
 </template>

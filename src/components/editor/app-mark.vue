@@ -1,10 +1,14 @@
 <template>
   <mark
     class="relative mx-1 bg-amber-300/90 hover:bg-amber-300/100 cursor-pointer group transition-all"
+    aria-label="Marked words"
+    role="button"
+    tabindex="0"
   >
     <slot></slot>
     <div
       class="icon absolute top-[-2px] right-[-2px] bg-white w-4 h-4 rounded-full flex justify-center items-center opacity-0 group-hover:opacity-80 transition-all"
+      aria-hidden="true"
     >
       <i class="fa fa-close text-center"></i>
     </div>

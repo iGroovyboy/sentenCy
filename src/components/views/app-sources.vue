@@ -1,6 +1,6 @@
 <template>
   <h1>Source data</h1>
-  <section class="card">
+  <section class="card" v-resizable.br>
     <aside>
       <app-dropzone text="Drop file or click to import" @load="importData" />
     </aside>
@@ -9,6 +9,7 @@
       @input="updateData"
       class="w-full min-h-[400px] bg-dark-200 border border-dark-70 hover:border-dark-60 outline-0 focus:border-amber-500 p-1 text-dark-50 transition-all"
       name="source"
+      aria-label="Source text"
     ></textarea>
     <div class="flex flex-row justify-between">
       <app-btn icon="fa-eraser" text="Clear" @click="data = ''" />

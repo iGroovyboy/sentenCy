@@ -1,6 +1,8 @@
 <template>
   <nav
     class="toolbar bg-dark-200 flex flex-col fixed w-16 h-screen top-0 p-2 pt-5"
+    aria-label="Main menu"
+    role="navigation"
   >
     <app-icon-btn
       v-for="btn in buttons"
@@ -8,6 +10,7 @@
       @click="btn.action ? btn.action() : mainStore.setScreen(btn.screen)"
       :icon-class="btn.icon"
       :is-active="mainStore.screen === btn.screen"
+      :aria-label="btn.name"
     />
   </nav>
 </template>

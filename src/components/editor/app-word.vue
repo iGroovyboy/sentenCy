@@ -3,6 +3,8 @@
     class="word mx-1 bg-transparent cursor-pointer"
     :class="{ hovers: !marked }"
     v-text="text"
+    role="button"
+    tabindex="0"
   />
 </template>
 

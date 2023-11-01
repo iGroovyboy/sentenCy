@@ -3,8 +3,9 @@
   <section class="card">
     <p>
       This is a simple
-      <app-tag hotkey="tool" text="annotation" is-active /> tool originally made
-      for <a href="https://spacy.io/" target="_blank">spaCy</a>.
+      <app-tag hotkey="tool" text="annotation" is-active role="presentation" />
+      tool originally made for
+      <a href="https://spacy.io/" target="_blank">spaCy</a>.
     </p>
     <p>
       It allows loading of raw text data, tagging words in sentences (attaching

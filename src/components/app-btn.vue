@@ -1,5 +1,5 @@
 <template>
-  <div :class="['', alignmentClass]">
+  <div :class="['', alignmentClass]" :aria-label="text">
     <button
       @click.self="!disabled && $emit('click')"
       class="p-2 px-6 transition-all group"

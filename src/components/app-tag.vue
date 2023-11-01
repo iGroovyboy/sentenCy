@@ -2,6 +2,10 @@
   <div
     class="min-h-[30px] bg-transparent active:bg-dark-100 hover:border-dark-50 text-dark-50 relative inline-flex items-center px-3 text-lg border border-dark-60 rounded-full uppercase cursor-pointer transition-all"
     :class="{ active: isActive }"
+    :aria-label="`Tag: ${text}, hotkey: ${hotkey}`"
+    role="radio"
+    @keyup="action"
+    tabindex="0"
   >
     <div class="text-base font-bold" v-text="text" />
     <div
@@ -14,6 +18,8 @@
       v-if="!noClose"
       class="close ml-2 min-w-[22px] text-right border-l-2 border-white/20"
       @click.stop="$emit('delete')"
+      aria-label="Delete Tag"
+      role="button"
     >
       <i class="fa fa-close text-dark-50" :class="{ activeSub: isActive }"></i>
     </div>
@@ -21,12 +27,24 @@
 </template>
 
 <script setup lang="ts">
+import { KEY_CODE } from "@/common/constants.ts";
+
 defineProps<{
   text: string;
   hotkey: string;
   isActive?: boolean;
   noClose?: boolean;
 }>();
+
+const emit = defineEmits(["delete", "click"]);
+
+const action = (e) => {
+  if (KEY_CODE.DELETE === e.keyCode) {
+    emit("delete");
+  } else if ([KEY_CODE.ENTER, KEY_CODE.SPACE].includes(e.keyCode)) {
+    emit("click");
+  }
+};
 </script>
 
 <style lang="scss" scoped>
