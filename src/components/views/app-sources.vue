@@ -1,7 +1,9 @@
 <template>
   <h1>Source data</h1>
-  <div class="card">
-    <app-dropzone text="Drop file or click to import" @load="importData" />
+  <section class="card">
+    <aside>
+      <app-dropzone text="Drop file or click to import" @load="importData" />
+    </aside>
     <textarea
       v-model="data"
       @input="updateData"
@@ -12,7 +14,7 @@
       <app-btn icon="fa-eraser" text="Clear" @click="data = ''" />
       <app-btn-next :nextScreen="SCREEN.TAGS" :disabled="!data.length" />
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

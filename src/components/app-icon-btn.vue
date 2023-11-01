@@ -1,6 +1,9 @@
 <template>
   <button class="mb-4">
-    <i class="fa fa-lg text-dark-50" :class="[icon, { active: isActive }]"></i>
+    <i
+      class="fa fa-lg text-dark-50 hover:text-white/60 active:text-white/70 transition-all"
+      :class="[icon, { active: isActive }]"
+    ></i>
   </button>
 </template>
 

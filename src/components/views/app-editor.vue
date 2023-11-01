@@ -1,6 +1,6 @@
 <template>
   <h1>Tag content</h1>
-  <div class="card">
+  <section class="card">
     <h2>
       Progress: <span v-text="rowId + 1 + ' / ' + processedData?.length" />
     </h2>
@@ -9,9 +9,9 @@
       :done="rowId + 1"
       :total="processedData?.length"
     />
-  </div>
+  </section>
 
-  <div class="card">
+  <section class="card">
     <h2>Assign tags</h2>
     <div class="border border border-dark-60/60">
       <div
@@ -56,18 +56,18 @@
         icon="fa-forward"
       />
     </div>
-    <div class="help mt-6 text-dark-60 flex items-center gap-x-4">
+    <aside class="help mt-6 text-dark-60 flex items-center gap-x-4">
       <i class="fa fa-question-circle fa-3x text-dark-70"></i>
       <div>
         <p>Single click on a word to tag single word.</p>
         <p>Drag-select several words to tag them.</p>
       </div>
-    </div>
-  </div>
+    </aside>
+  </section>
 </template>
 
 <script setup lang="ts">
-import AppTag from "@/components/tags/app-tag.vue";
+import AppTag from "@/components/app-tag.vue";
 import { onMounted, ref, watch } from "vue";
 import AppBtn from "@/components/app-btn.vue";
 import { STORAGE_KEY } from "@/common/constants.ts";

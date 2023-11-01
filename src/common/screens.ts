@@ -1,5 +1,6 @@
 export const SCREEN = {
-  SOURCES: 0,
-  EDITOR: 1,
+  HOME: 0,
+  SOURCES: 1,
   TAGS: 2,
+  EDITOR: 3,
 };

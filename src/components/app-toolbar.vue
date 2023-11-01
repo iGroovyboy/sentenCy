@@ -1,5 +1,5 @@
 <template>
-  <div
+  <nav
     class="toolbar bg-dark-200 flex flex-col fixed w-16 h-screen top-0 p-2 pt-5"
   >
     <app-icon-btn
@@ -9,7 +9,7 @@
       :icon-class="btn.icon"
       :is-active="mainStore.screen === btn.screen"
     />
-  </div>
+  </nav>
 </template>
 
 <script setup lang="ts">
@@ -40,6 +40,11 @@ interface ToolbarButton {
 
 const buttons: ToolbarButton[] = [
   {
+    name: "home",
+    icon: "fa-home",
+    screen: SCREEN.HOME,
+  },
+  {
     name: "sources",
     icon: "fa-list-ul",
     screen: SCREEN.SOURCES,
@@ -62,8 +67,4 @@ const buttons: ToolbarButton[] = [
 ];
 </script>
 
-<style lang="scss" scoped>
-//.toolbar {
-//  background-color: #212120;
-//}
-</style>
+<style lang="scss" scoped></style>

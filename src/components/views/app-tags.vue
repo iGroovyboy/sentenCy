@@ -1,8 +1,13 @@
 <template>
   <h1>Edit tags</h1>
-  <div class="card">
-    <app-dropzone text="Drop file or click to import tags" @load="importData" />
-    <div class="form">
+  <section class="card">
+    <aside>
+      <app-dropzone
+        text="Drop file or click to import tags"
+        @load="importData"
+      />
+    </aside>
+    <div class="form my-4">
       <div class="input group">
         <span class="text-dark-60 group-hover:text-dark-50">Tag name*:</span>
         <input
@@ -20,32 +25,36 @@
           type="text"
         />
       </div>
+      <div class="flex gap-x-2 items-center mt-4">
+        <app-btn
+          @click="clearInputs"
+          :disabled="!(canSaveTag || hasDataInFields)"
+          icon="fa-eraser"
+          text="New"
+        />
+        <app-btn
+          v-if="canSaveTag"
+          @click="saveTag"
+          icon="fa-save"
+          text="Save"
+        />
+        <app-btn
+          v-else
+          @click="add"
+          icon="fa-plus"
+          text="Add"
+          :disabled="!hasDataInFields"
+        />
+        <app-divider mx="mx-4" />
+        <app-btn
+          @click="exportTagsJson"
+          text="Export"
+          icon="fa-download"
+          pos="end"
+          :disabled="!tags.length"
+        />
+      </div>
     </div>
-    <div class="flex gap-x-2 items-center mt-4">
-      <app-btn
-        @click="clearInputs"
-        :disabled="!(canSaveTag || hasDataInFields)"
-        icon="fa-eraser"
-        text="New"
-      />
-      <app-btn v-if="canSaveTag" @click="saveTag" icon="fa-save" text="Save" />
-      <app-btn
-        v-else
-        @click="add"
-        icon="fa-plus"
-        text="Add"
-        :disabled="!hasDataInFields"
-      />
-      <app-divider mx="mx-4" />
-      <app-btn
-        @click="exportTagsJson"
-        text="Export"
-        icon="fa-download"
-        pos="end"
-        :disabled="!tags.length"
-      />
-    </div>
-
     <div
       class="tags-list mt-4 p-4 flex flex-row flex-wrap gap-x-2 border border-dark-60/60"
     >
@@ -64,13 +73,13 @@
       :nextScreen="SCREEN.EDITOR"
       :disabled="!tags.length"
     />
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
 import AppBtn from "@/components/app-btn.vue";
 import { computed, onMounted, reactive, ref } from "vue";
-import AppTag from "@/components/tags/app-tag.vue";
+import AppTag from "@/components/app-tag.vue";
 import clone from "lodash/clone";
 import isEmpty from "lodash/isEmpty";
 import AppDropzone from "@/components/app-dropzone.vue";

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-[30px] bg-transparent active:bg-dark-100 hover:border-dark-50 text-dark-50 relative flex items-center px-3 text-lg border border-dark-60 rounded-full uppercase cursor-pointer transition-all"
+    class="min-h-[30px] bg-transparent active:bg-dark-100 hover:border-dark-50 text-dark-50 relative inline-flex items-center px-3 text-lg border border-dark-60 rounded-full uppercase cursor-pointer transition-all"
     :class="{ active: isActive }"
   >
     <div class="text-base font-bold" v-text="text" />
