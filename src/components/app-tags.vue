@@ -21,9 +21,22 @@
         />
       </div>
     </div>
-    <div class="flex space-x-2">
-      <app-btn v-if="canSaveTag" @click="saveTag" icon="fa-plus" text="Save" />
-      <app-btn v-else @click="add" icon="fa-plus" text="Add" />
+    <div class="flex gap-x-2 items-center mt-4">
+      <app-btn
+        @click="clearInputs"
+        :disabled="!(canSaveTag || hasDataInFields)"
+        icon="fa-eraser"
+        text="New"
+      />
+      <app-btn v-if="canSaveTag" @click="saveTag" icon="fa-save" text="Save" />
+      <app-btn
+        v-else
+        @click="add"
+        icon="fa-plus"
+        text="Add"
+        :disabled="!hasDataInFields"
+      />
+      <app-divider mx="mx-4" />
       <app-btn
         @click="exportTagsJson"
         text="Export"
@@ -34,7 +47,7 @@
     </div>
 
     <div
-      class="tags-list mt-4 p-4 flex flex-row flex-wrap space-x-2 max-w-3xl border border-dark-60/60"
+      class="tags-list mt-4 p-4 flex flex-row flex-wrap gap-x-2 border border-dark-60/60"
     >
       <app-tag
         @click="editTag(tag)"
@@ -46,7 +59,11 @@
         :is-active="currentTag.name === tag.name"
       />
     </div>
-    <app-btn-next :nextScreen="SCREEN.EDITOR" :disabled="!tags.length" />
+    <app-btn-next
+      class="mt-2"
+      :nextScreen="SCREEN.EDITOR"
+      :disabled="!tags.length"
+    />
   </div>
 </template>
 
@@ -60,6 +77,7 @@ import AppDropzone from "@/components/app-dropzone.vue";
 import { SCREEN } from "@/common/screens.ts";
 import AppBtnNext from "@/components/app-btn-next.vue";
 import { STORAGE_KEY } from "@/common/constants.ts";
+import AppDivider from "@/components/app-divider.vue";
 
 const currentTag = reactive<Tag | {}>({
   name: "",
@@ -79,6 +97,10 @@ const canSaveTag = computed(() => {
   const isCurrentTagExist = !!currentTag.name?.length;
   return isCurrentTagExist && isTagExists.value;
 });
+
+const hasDataInFields = computed(
+  () => currentTag.name.length || currentTag.hotkey.length,
+);
 
 const tagChange = (e) => {
   if (e.keyCode === 13) {
@@ -135,6 +157,11 @@ const add = () => {
 const editTag = (tag: Tag) => {
   currentTag.name = tag.name;
   currentTag.hotkey = tag.hotkey;
+};
+
+const clearInputs = () => {
+  currentTag.name = "";
+  currentTag.hotkey = "";
 };
 
 const exportTagsJson = () => {

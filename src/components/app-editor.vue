@@ -6,7 +6,6 @@
     </h2>
     <app-progress
       v-if="processedData?.length"
-      class="max-w-3xl"
       :done="rowId + 1"
       :total="processedData?.length"
     />
@@ -14,10 +13,10 @@
 
   <div class="card">
     <h2>Assign tags</h2>
-    <div class="border border-dark-60/80 max-w-3xl">
+    <div class="border border border-dark-60/60">
       <div
         v-if="availableTags?.length"
-        class="title-wrapper w-full flex flex-row flex-wrap p-2"
+        class="title-wrapper w-full flex flex-row flex-wrap space-x-2 p-4"
       >
         <app-tag
           @click="currentTag = tag"
@@ -35,7 +34,7 @@
       />
     </div>
 
-    <div class="flex space-x-2">
+    <div class="flex gap-x-2 mt-2">
       <app-btn
         @click="editPrevLine"
         text="Prev"

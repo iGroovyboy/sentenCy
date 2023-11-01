@@ -1,10 +1,15 @@
 <template>
   <div
-    class="bg-transparent text-white flex m-2 px-3 text-lg font-bold border rounded-md uppercase cursor-pointer"
+    class="min-h-[30px] bg-transparent text-dark-50 relative flex items-center px-3 text-lg border border-dark-60 rounded-full uppercase cursor-pointer"
     :class="{ active: isActive }"
   >
-    <div class="text" v-text="text" />
-    <div class="hotkey" v-text="hotkey" />
+    <div class="text-base font-bold" v-text="text" />
+    <div
+      v-if="hotkey.length"
+      class="hotkey text-sm text-white ml-2 pl-2 border-l-2 border-white/20"
+      :class="{ activeSub: isActive }"
+      v-text="hotkey"
+    />
   </div>
 </template>
 
@@ -14,6 +19,9 @@ defineProps<{ text: string; hotkey: string; isActive?: boolean }>();
 
 <style lang="scss" scoped>
 .active {
-  @apply text-blue-950 bg-white;
+  @apply text-dark-400 bg-amber-500/80 hover:bg-amber-500/100 border-transparent;
+}
+.activeSub {
+  @apply text-dark-400  border-transparent;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-transparent text-dark-50 relative flex items-center px-3 text-lg border border-dark-60 rounded-full uppercase cursor-pointer"
+    class="min-h-[30px] bg-transparent text-dark-50 relative flex items-center px-3 text-lg border border-dark-60 rounded-full uppercase cursor-pointer"
     :class="{ active: isActive }"
   >
     <div class="text-base font-bold" v-text="text" />

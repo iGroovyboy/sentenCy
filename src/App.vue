@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-24 mt-8">
+  <div class="ml-24 mt-8 mr-8">
     <component :is="currentScreen" />
   </div>
   <app-toolbar />
