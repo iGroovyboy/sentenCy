@@ -17,11 +17,18 @@ import AppIconBtn from "./app-icon-btn.vue";
 import useMain from "@/store/use_main";
 import { SCREEN } from "@/common/screens.ts";
 import { csvExport } from "@/common/export.ts";
+import { openWindowWithBlob } from "@/common/helpers.ts";
 
 const mainStore = useMain();
 
 const save = () => {
-  csvExport();
+  const data = csvExport();
+  if (data?.length) {
+    console.log(data);
+    openWindowWithBlob(data);
+  } else {
+    alert("Export data is empty");
+  }
 };
 
 interface ToolbarButton {

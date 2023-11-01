@@ -78,6 +78,7 @@ import { SCREEN } from "@/common/screens.ts";
 import AppBtnNext from "@/components/app-btn-next.vue";
 import { STORAGE_KEY } from "@/common/constants.ts";
 import AppDivider from "@/components/app-divider.vue";
+import { openWindowWithBlob } from "@/common/helpers.ts";
 
 const currentTag = reactive<Tag | {}>({
   name: "",
@@ -166,9 +167,7 @@ const clearInputs = () => {
 
 const exportTagsJson = () => {
   if (tags.value.length) {
-    const data = [JSON.stringify(tags.value)];
-    const blob = new Blob(data, { type: "text/json" });
-    window.open(URL.createObjectURL(blob));
+    openWindowWithBlob(JSON.stringify(tags.value));
   }
 };
 

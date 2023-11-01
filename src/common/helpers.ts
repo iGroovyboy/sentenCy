@@ -99,3 +99,13 @@ export const getArrPrevKey = (arr: any[], currentId: number): number | null => {
 
   return null;
 };
+
+export const openWindowWithBlob = (data, type = "text/json") => {
+  try {
+    const blob = new Blob([data], { type: type });
+    window.open(URL.createObjectURL(blob));
+  } catch (e) {
+    console.error(e);
+    alert(e);
+  }
+};

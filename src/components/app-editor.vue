@@ -25,6 +25,7 @@
           :text="tag.name"
           :hotkey="tag.hotkey"
           :is-active="currentTag.name === tag.name"
+          no-close
         />
       </div>
       <app-text-wrapper
@@ -41,7 +42,13 @@
         :disabled="!isPrevLineAvailable"
         icon="fa-backward"
       />
-      <app-btn @click="acceptLine" text="Accept" icon="fa-check" />
+      <app-btn
+        @click="acceptLine"
+        text="Accept"
+        icon="fa-check"
+        bg-color="bg-emerald-500"
+        is-emerald
+      />
       <app-btn
         @click="editNextLine"
         text="Skip"
@@ -49,16 +56,19 @@
         icon="fa-forward"
       />
     </div>
-    <div class="help">
-      <p>Click on word to select single word.</p>
-      <p>Select several words to assign group of words</p>
+    <div class="help mt-6 text-dark-60 flex items-center gap-x-4">
+      <i class="fa fa-question-circle fa-3x text-dark-70"></i>
+      <div>
+        <p>Single click on a word to tag single word.</p>
+        <p>Drag-select several words to tag them.</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import AppTag from "@/components/editor/app-tag.vue";
-import { onMounted, reactive, ref, watch } from "vue";
+import AppTag from "@/components/tags/app-tag.vue";
+import { onMounted, ref, watch } from "vue";
 import AppBtn from "@/components/app-btn.vue";
 import { STORAGE_KEY } from "@/common/constants.ts";
 import { Tag, TaggedGroup } from "@/common/interfaces.ts";
