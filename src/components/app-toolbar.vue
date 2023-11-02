@@ -27,7 +27,6 @@ const mainStore = useMain();
 const save = () => {
   const data = csvExport();
   if (data?.length) {
-    console.log(data);
     openWindowWithBlob(data);
   } else {
     alert("Export data is empty");

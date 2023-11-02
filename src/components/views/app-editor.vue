@@ -1,12 +1,11 @@
 <template>
   <h1>Tag content</h1>
   <section class="card">
-    <h2>
-      Progress: <span v-text="rowId + 1 + ' / ' + processedData?.length" />
-    </h2>
+    <h2>Progress</h2>
     <app-progress
       v-if="processedData?.length"
-      :done="rowId + 1"
+      :done="progressDone"
+      :skipped="progressSkipped"
       :total="processedData?.length"
       aria-hidden="true"
     />
@@ -58,7 +57,7 @@
       />
       <app-btn
         @click="editNextLine"
-        text="Skip"
+        :text="isRowTagged() ? 'Next' : 'Skip'"
         :disabled="!isNextLineAvailable"
         icon="fa-forward"
       />
@@ -100,6 +99,8 @@ const availableTags = ref<Tag[]>([]);
 const data = ref<Array<TaggedGroup | string>>([]);
 const rowId = ref<number>(-1);
 let processedData: null | string[] = null;
+const progressDone = ref(0);
+const progressSkipped = ref(0);
 
 const isPrevLineAvailable = ref(false);
 const isNextLineAvailable = ref(false);
@@ -113,6 +114,14 @@ watch(
     isNextLineAvailable.value = processedData
       ? getArrNextKey(processedData, rowId.value) !== null
       : false;
+
+    progressDone.value =
+      Object.keys(
+        JSON.parse(localStorage.getItem(STORAGE_KEY.TAGGED_DATA) || "{}"),
+      )?.length || 0;
+    progressSkipped.value =
+      JSON.parse(localStorage.getItem(STORAGE_KEY.SKIPPED_DATA) || "{}")
+        ?.length || 0;
   },
 );
 
@@ -161,9 +170,6 @@ const onSelected = async () => {
   }
 
   sel.empty();
-
-  console.log(">>>", data.value);
-  console.log(sentenceData);
 };
 
 const deleteTag = (e: number) => {
@@ -188,9 +194,28 @@ const acceptLine = () => {
   editNextLine();
 };
 
+const isRowTagged = () =>
+  data.value.some((row: string | Record<string, unknown>) => isObject(row));
+
+const saveRowAsSkipped = () => {
+  const skippedArr = JSON.parse(
+    localStorage.getItem(STORAGE_KEY.SKIPPED_DATA) || "[]",
+  );
+  skippedArr.push(rowId.value);
+  const skippedData = [...new Set(skippedArr)];
+
+  console.log(">>skippedData", skippedData);
+
+  localStorage.setItem(STORAGE_KEY.SKIPPED_DATA, JSON.stringify(skippedData));
+};
+
 const editNextLine = () => {
   if (isNextLineAvailable.value) {
-    console.log("is next line avaiable: true", rowId.value);
+    if (!isRowTagged()) {
+      console.log("Row is not tagged! Skip");
+      saveRowAsSkipped();
+    }
+
     rowId.value = getArrNextKey(processedData, rowId.value);
     localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value);
 
@@ -200,7 +225,6 @@ const editNextLine = () => {
 
 const editPrevLine = () => {
   if (isPrevLineAvailable.value) {
-    console.log("is prev line avaiable: true", rowId.value);
     rowId.value = getArrPrevKey(processedData, rowId.value);
     localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value);
 
@@ -249,7 +273,6 @@ const processSourceData = () => {
   }
 
   if (!isEmpty(processedData[rowId.value])) {
-    console.log("OK", processedData[rowId.value].split(" "));
     return processedData[rowId.value].split(" ");
   }
 };
@@ -262,7 +285,8 @@ onMounted(() => {
   if (availableTags.value?.length) {
     currentTag.value = availableTags.value[0];
   }
-  rowId.value = 0;
+
+  console.log("Current row id: " + rowId.value);
 });
 </script>
 

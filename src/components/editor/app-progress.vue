@@ -1,37 +1,58 @@
 <template>
-  <div
-    class="progress flex w-full h-2 bg-dark-100 border border-dark-60 my-1 relative"
-  >
-    <div class="bar bg-amber-500" />
-    <!--    <div-->
-    <!--      class="absolute leading-1 font-bold text-sm text-white text-shadow-1 ml-1"-->
-    <!--      v-text="details"-->
-    <!--    />-->
+  <div class="progress flex flex-col w-full my-1 relative">
+    <ul class="flex flex-row justify-between mb-1">
+      <li class="text-dark-50 upp">
+        Tagged<span
+          class="text-2xl font-bold text-emerald-500 ml-2"
+          v-text="done"
+        />
+      </li>
+      <li class="text-dark-50 upp">
+        Skipped<span
+          class="text-2xl font-bold text-amber-600 ml-2"
+          v-text="skipped"
+        />
+      </li>
+      <li class="text-dark-50 upp">
+        Total<span
+          class="text-2xl font-bold text-dark-50 ml-2"
+          v-text="total"
+        />
+      </li>
+    </ul>
+    <div class="bar-wrapper flex flex-row w-full border border-dark-60">
+      <div class="tagged h-2 bg-emerald-500" />
+      <div class="skipped h-2 bg-amber-500" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from "vue";
+import { computed } from "vue";
 
 const props = defineProps<{
   text?: string;
   total: number;
   done?: number;
+  skipped?: number;
 }>();
 
-const details = computed(() => {
-  const numbers = +props.done + " / " + props.total;
-  const prefix = props.text || "";
-  return prefix + numbers;
-});
+// const details = computed(() => {
+//   const numbers = +props.done + " / " + props.total;
+//   const prefix = props.text || "";
+//   return prefix + numbers;
+// });
 
-const width = computed(() => {
-  return (props.done / props.total) * 100 + "%";
-});
+const widthTagged = computed(() => (props.done / props.total) * 100 + "%");
+
+const widthSkipped = computed(() => (props.skipped / props.total) * 100 + "%");
 </script>
 
 <style lang="scss" scoped>
-.bar {
-  width: v-bind("width");
+.tagged {
+  width: v-bind("widthTagged");
+}
+.skipped {
+  width: v-bind("widthSkipped");
 }
 </style>
