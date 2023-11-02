@@ -7,7 +7,7 @@
     <app-icon-btn
       v-for="btn in buttons"
       :key="btn.name"
-      @click="btn.action ? btn.action() : mainStore.setScreen(btn.screen)"
+      @click="btn.action ? btn.action() : mainStore.setScreen(btn.screen || 0)"
       :icon-class="btn.icon"
       :is-active="mainStore.screen === btn.screen"
       :aria-label="btn.name"

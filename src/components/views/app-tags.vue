@@ -91,16 +91,16 @@ import isEmpty from "lodash/isEmpty";
 import AppDropzone from "@/components/app-dropzone.vue";
 import { SCREEN } from "@/common/screens.ts";
 import AppBtnNext from "@/components/app-btn-next.vue";
-import { STORAGE_KEY } from "@/common/constants.ts";
+import { KEY_CODE, STORAGE_KEY } from "@/common/constants.ts";
 import AppDivider from "@/components/app-divider.vue";
 import { openWindowWithBlob } from "@/common/helpers.ts";
 import { Tag } from "@/common/interfaces.ts";
 
-const currentTag = reactive<Tag | {}>({
+const currentTag = reactive<Tag>({
   name: "",
   hotkey: "",
 });
-const tags = ref<Tag[] | []>([]);
+const tags = ref<any[]>([]);
 const tagInput = ref<null | HTMLInputElement>(null);
 
 const isTagExists = computed(() => {
@@ -116,18 +116,18 @@ const canSaveTag = computed(() => {
 });
 
 const hasDataInFields = computed(
-  () => currentTag.name.length || currentTag.hotkey.length,
+  () => currentTag.name.length || currentTag.hotkey?.length,
 );
 
-const tagChange = (e) => {
-  if (e.keyCode === 13) {
+const tagChange = (e: KeyboardEvent) => {
+  if ([KEY_CODE.ENTER, KEY_CODE.SPACE].includes(e.code)) {
     add();
   }
 };
 
-const hotkeyChange = (e) => {
-  if (e.keyCode === 13) {
-    tagInput.value.focus();
+const hotkeyChange = (e: KeyboardEvent) => {
+  if ([KEY_CODE.ENTER, KEY_CODE.SPACE].includes(e.code)) {
+    tagInput.value?.focus();
     add();
   }
 };
@@ -152,10 +152,12 @@ const saveTag = () => {
   const tag = tags.value.find((t) => {
     return t.name === currentTag.name;
   });
-  tag.name = currentTag.name;
-  tag.hotkey = currentTag.hotkey;
+  if (tag) {
+    tag.name = currentTag.name;
+    tag.hotkey = currentTag.hotkey;
 
-  updateStorage();
+    updateStorage();
+  }
 };
 
 const add = () => {

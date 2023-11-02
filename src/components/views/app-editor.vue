@@ -81,7 +81,13 @@ import AppTag from "@/components/app-tag.vue";
 import { onMounted, ref, watch } from "vue";
 import AppBtn from "@/components/app-btn.vue";
 import { STORAGE_KEY } from "@/common/constants.ts";
-import { Tag, TaggedGroup } from "@/common/interfaces.ts";
+import {
+  Tag,
+  TaggedData,
+  TaggedDataItem,
+  TaggedGroup,
+  TaggedWords,
+} from "@/common/interfaces.ts";
 import clone from "lodash/clone";
 import {
   extendSelectionToWord,
@@ -93,10 +99,12 @@ import isObject from "lodash/isObject";
 import AppTextWrapper from "@/components/editor/app-text-wrapper.vue";
 import AppProgress from "@/components/editor/app-progress.vue";
 
-const currentTag = ref<Tag | {}>({});
+const currentTag = ref<Tag>({
+  name: "",
+});
 
 const availableTags = ref<Tag[]>([]);
-const data = ref<Array<TaggedGroup | string>>([]);
+const data = ref<TaggedData>([]);
 const rowId = ref<number>(-1);
 let processedData: null | string[] = null;
 const progressDone = ref(0);
@@ -133,22 +141,32 @@ const onSelected = async () => {
   await extendSelectionToWord();
 
   const sel = document.getSelection();
-  const startId = +sel?.anchorNode?.parentElement?.dataset?.id;
-  const endId = +sel?.focusNode?.parentElement?.dataset?.id;
+  const startId = sel?.anchorNode?.parentElement?.dataset?.id
+    ? +sel?.anchorNode?.parentElement?.dataset?.id
+    : null;
+  const endId = sel?.focusNode?.parentElement?.dataset?.id
+    ? +sel?.focusNode?.parentElement?.dataset?.id
+    : null;
+
+  if (!startId || !endId) {
+    return;
+  }
 
   if (isOccupied(startId) || isOccupied(endId)) {
     sel?.empty();
     return;
   }
 
-  const sentenceData: Record<number, TaggedGroup> = {};
+  const sentenceData: TaggedDataItem = {};
 
   if (startId === endId) {
     const i = startId;
-    sentenceData[i] = clone(currentTag.value);
-    sentenceData[i].range = [startId, endId];
-    sentenceData[i].isSingle = startId === endId;
-    sentenceData[i].text = sel?.toString() || "";
+    sentenceData[i] = {
+      ...clone(currentTag.value),
+      range: [startId, endId],
+      isSingle: startId === endId,
+      text: sel?.toString() || "",
+    };
 
     data.value[i] = sentenceData[i];
   } else {
@@ -157,29 +175,34 @@ const onSelected = async () => {
       (_, index) => index + startId,
     );
 
-    sentenceData[startId] = {};
+    (sentenceData[startId] as unknown as TaggedWords) = {};
     for (const i of range) {
-      sentenceData[startId][i] = clone(currentTag.value);
-      sentenceData[startId][i].range = [startId, endId];
-      sentenceData[startId][i].isSingle = startId === endId;
-      sentenceData[startId][i].text = data.value[i];
-      delete data.value[i];
+      (sentenceData[startId] as unknown as TaggedWords)[i] = {
+        ...clone(currentTag.value),
+        range: [startId, endId],
+        isSingle: startId === endId,
+        text: data.value[i].toString(),
+      };
     }
 
     data.value[startId] = sentenceData[startId];
   }
 
-  sel.empty();
+  sel?.empty();
 };
 
 const deleteTag = (e: number) => {
-  const group: TaggedGroup | string = data.value[e];
-  if (isObject(group) && group.isSingle) {
-    const wordId = group.range[0];
-    data.value[wordId] = group.text;
+  const group: TaggedDataItem = data.value[e];
+  if (
+    isObject(group) &&
+    "isSingle" in (group as TaggedGroup) &&
+    (group as TaggedGroup).isSingle
+  ) {
+    const wordId = (group as TaggedGroup).range[0];
+    data.value[wordId] = (group as TaggedGroup).text;
   } else {
-    for (const wordId in group) {
-      data.value[wordId] = group[wordId].text;
+    for (const wordId in group as TaggedWords) {
+      data.value[wordId] = (group as TaggedWords)[wordId].text;
     }
   }
 };
@@ -216,36 +239,58 @@ const editNextLine = () => {
       saveRowAsSkipped();
     }
 
-    rowId.value = getArrNextKey(processedData, rowId.value);
-    localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value);
+    // TODO: refactor to use one func with editPrevLine
+    if (processedData?.length) {
+      const nextKey = getArrNextKey(processedData, rowId.value);
+      if (nextKey) {
+        rowId.value = getArrNextKey(processedData, rowId.value) || rowId.value;
+        localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value.toString());
 
-    loadData();
+        loadData();
+      } else {
+        console.error(
+          "Couldn't get valid 'next' key in array of processed data",
+        );
+      }
+    }
   }
 };
 
 const editPrevLine = () => {
   if (isPrevLineAvailable.value) {
-    rowId.value = getArrPrevKey(processedData, rowId.value);
-    localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value);
+    // TODO: refactor to use one func with editNextLine
+    if (processedData?.length) {
+      const prevKey = getArrPrevKey(processedData, rowId.value);
+      if (prevKey !== null && prevKey >= 0) {
+        rowId.value = prevKey;
+        localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value.toString());
 
-    loadData();
+        loadData();
+      } else {
+        console.error(
+          "Couldn't get valid 'prev' key in array of processed data",
+        );
+      }
+    }
   }
 };
 
 const loadData = () => {
-  if (!isEmpty(processedData[rowId.value])) {
-    data.value = processedData[rowId.value].split(" ");
+  if (!isEmpty(processedData?.[rowId.value])) {
+    data.value = processedData?.[rowId.value].split(" ") || [];
   }
 
   const taggedData = JSON.parse(
     localStorage.getItem(STORAGE_KEY.TAGGED_DATA) || "{}",
   );
   if (!isEmpty(taggedData[rowId.value])) {
-    taggedData[rowId.value].forEach((element, index) => {
-      if (isEmpty(element)) {
-        delete taggedData[rowId.value][index];
-      }
-    });
+    taggedData[rowId.value].forEach(
+      (element: TaggedDataItem, index: number) => {
+        if (isEmpty(element)) {
+          delete taggedData[rowId.value][index];
+        }
+      },
+    );
 
     data.value = taggedData[rowId.value];
   }
@@ -253,27 +298,29 @@ const loadData = () => {
 
 const processSourceData = () => {
   processedData = JSON.parse(
-    localStorage.getItem(STORAGE_KEY.PROCESSED_SOURCE),
+    localStorage.getItem(STORAGE_KEY.PROCESSED_SOURCE) || "[]",
   );
 
-  rowId.value = +localStorage.getItem(STORAGE_KEY.ROW_ID) || 0;
-  localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value);
+  rowId.value = +(localStorage.getItem(STORAGE_KEY.ROW_ID) || 0);
+  localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value.toString());
 
   const taggedData = JSON.parse(
     localStorage.getItem(STORAGE_KEY.TAGGED_DATA) || "{}",
   );
   if (!isEmpty(taggedData[rowId.value])) {
-    taggedData[rowId.value].forEach((element, index) => {
-      if (isEmpty(element)) {
-        delete taggedData[rowId.value][index];
-      }
-    });
+    taggedData[rowId.value].forEach(
+      (element: TaggedDataItem, index: number) => {
+        if (isEmpty(element)) {
+          delete taggedData[rowId.value][index];
+        }
+      },
+    );
 
     return taggedData[rowId.value];
   }
 
-  if (!isEmpty(processedData[rowId.value])) {
-    return processedData[rowId.value].split(" ");
+  if (!isEmpty(processedData?.[rowId.value])) {
+    return processedData?.[rowId.value].split(" ");
   }
 };
 
@@ -287,6 +334,7 @@ onMounted(() => {
   }
 
   console.log("Current row id: " + rowId.value);
+  console.log("Data", data.value);
 });
 </script>
 

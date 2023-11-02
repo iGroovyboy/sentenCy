@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ mx?: string }>();
+defineProps<{ mx?: string }>();
 </script>
 
 <style lang="scss" scoped></style>

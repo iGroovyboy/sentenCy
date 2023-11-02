@@ -9,7 +9,7 @@
   >
     <div class="text-base font-bold" v-text="text" />
     <div
-      v-if="hotkey.length"
+      v-if="hotkey?.length"
       class="hotkey text-sm text-white ml-2 pl-2 border-l-2 border-white/20"
       :class="{ activeSub: isActive }"
       v-text="hotkey"
@@ -31,17 +31,17 @@ import { KEY_CODE } from "@/common/constants.ts";
 
 defineProps<{
   text: string;
-  hotkey: string;
+  hotkey: string | undefined;
   isActive?: boolean;
   noClose?: boolean;
 }>();
 
 const emit = defineEmits(["delete", "click"]);
 
-const action = (e) => {
-  if (KEY_CODE.DELETE === e.keyCode) {
+const action = (e: KeyboardEvent) => {
+  if (KEY_CODE.DELETE === e.code) {
     emit("delete");
-  } else if ([KEY_CODE.ENTER, KEY_CODE.SPACE].includes(e.keyCode)) {
+  } else if ([KEY_CODE.ENTER, KEY_CODE.SPACE].includes(e.code)) {
     emit("click");
   }
 };

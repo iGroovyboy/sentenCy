@@ -1,6 +1,6 @@
 import isEmpty from "lodash/isEmpty";
 
-export function jenkinsHash(str) {
+export function jenkinsHash(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash += str.charCodeAt(i);
@@ -26,15 +26,17 @@ export const extendSelectionToWord = () => {
     // Find the start of the word
     while (
       startOffset > 0 &&
-      /\S/.test(startContainer.textContent[startOffset - 1])
+      startContainer?.textContent?.[startOffset - 1] &&
+      /\S/.test(startContainer?.textContent?.[startOffset - 1])
     ) {
       startOffset--;
     }
 
     // Find the end of the word
     while (
-      endOffset < endContainer.length &&
-      /\S/.test(endContainer.textContent[endOffset])
+      endOffset < (endContainer as unknown as string[])?.length &&
+      endContainer?.textContent &&
+      /\S/.test(endContainer?.textContent?.[endOffset])
     ) {
       endOffset++;
     }
@@ -63,18 +65,21 @@ export const incrStringVersion = (input: string) => {
   return `${input}_0`;
 };
 
-export const getNextItem = (map, prevKey) => {
-  const entries = Array.from(map.entries());
-  const prevIndex = entries.findIndex(([key, value]) => key === prevKey);
+// export const getNextItem = (map, prevKey) => {
+//   const entries = Array.from(map.entries());
+//   const prevIndex = entries.findIndex(([key, value]) => key === prevKey);
+//
+//   if (prevIndex !== -1 && prevIndex < entries.length - 1) {
+//     return entries[prevIndex + 1];
+//   }
+//
+//   return null; // Return null if there is no next item
+// };
 
-  if (prevIndex !== -1 && prevIndex < entries.length - 1) {
-    return entries[prevIndex + 1];
-  }
-
-  return null; // Return null if there is no next item
-};
-
-export const getArrNextKey = (arr: any[], currentId: number): number | null => {
+export const getArrNextKey = (
+  arr: string[],
+  currentId: number,
+): number | null => {
   if (
     !isEmpty(arr) &&
     currentId !== -1 &&
@@ -87,7 +92,10 @@ export const getArrNextKey = (arr: any[], currentId: number): number | null => {
   return null;
 };
 
-export const getArrPrevKey = (arr: any[], currentId: number): number | null => {
+export const getArrPrevKey = (
+  arr: string[],
+  currentId: number,
+): number | null => {
   if (
     !isEmpty(arr) &&
     currentId !== -1 &&
@@ -100,7 +108,7 @@ export const getArrPrevKey = (arr: any[], currentId: number): number | null => {
   return null;
 };
 
-export const openWindowWithBlob = (data, type = "text/json") => {
+export const openWindowWithBlob = (data: string, type = "text/json") => {
   try {
     const blob = new Blob([data], { type: type });
     window.open(URL.createObjectURL(blob));

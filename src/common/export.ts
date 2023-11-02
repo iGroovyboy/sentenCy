@@ -60,12 +60,14 @@ export const csvPrepareData = (): null | Array<string[]> => {
     if (taggedData[id]) {
       for (const wordData of taggedData[id]) {
         if (isObject(wordData)) {
-          if (wordData.hasOwnProperty("isSingle") && wordData.isSingle) {
-            availableTaggedData[wordData.name] = wordData.text;
+          if ("isSingle" in wordData && wordData.isSingle) {
+            availableTaggedData[(wordData as TaggedGroup).name] = (
+              wordData as TaggedGroup
+            ).text;
           } else {
             let tag = "";
             const text: string[] = [];
-            for (const [i, subwordData] of Object.entries(wordData)) {
+            for (const [_, subwordData] of Object.entries(wordData)) {
               tag = tag || (subwordData as TaggedGroup).name;
               text.push((subwordData as TaggedGroup).text);
             }

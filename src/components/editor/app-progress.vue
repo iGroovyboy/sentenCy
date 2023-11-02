@@ -37,15 +37,13 @@ const props = defineProps<{
   skipped?: number;
 }>();
 
-// const details = computed(() => {
-//   const numbers = +props.done + " / " + props.total;
-//   const prefix = props.text || "";
-//   return prefix + numbers;
-// });
+const widthTagged = computed(
+  () => ((props?.done || 0) / props.total) * 100 + "%",
+);
 
-const widthTagged = computed(() => (props.done / props.total) * 100 + "%");
-
-const widthSkipped = computed(() => (props.skipped / props.total) * 100 + "%");
+const widthSkipped = computed(
+  () => ((props?.skipped || 0) / props.total) * 100 + "%",
+);
 </script>
 
 <style lang="scss" scoped>

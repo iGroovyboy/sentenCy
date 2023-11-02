@@ -16,8 +16,8 @@ export const STORAGE_KEY = {
 export const SOURCE_TEXT_HEADER_NAME = "SOURCE";
 
 export const KEY_CODE = {
-  ENTER: 13,
-  DELETE: 46,
-  SPACE: 32,
-  TAB: 9,
+  ENTER: "Enter",
+  DELETE: "Delete",
+  SPACE: "Space",
+  TAB: "Tab",
 };

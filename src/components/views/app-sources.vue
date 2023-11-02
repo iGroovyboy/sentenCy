@@ -28,7 +28,7 @@ import AppBtn from "@/components/app-btn.vue";
 
 const data = ref("");
 
-const importData = (content) => {
+const importData = (content: string) => {
   data.value = content;
   updateData();
 };

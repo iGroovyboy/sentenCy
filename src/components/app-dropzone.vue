@@ -20,14 +20,14 @@ import { useDropzone } from "vue3-dropzone";
 import { reactive } from "vue";
 import { ALLOWED_FILE_TYPES } from "@/common/constants.ts";
 
-const props = defineProps<{ text: string }>();
+defineProps<{ text: string }>();
 const emit = defineEmits(["load"]);
 
-const state = reactive({
+const state = reactive<Record<string, File[]>>({
   files: [],
 });
 
-const onDrop = (acceptFiles, rejectReasons) => {
+const onDrop = (acceptFiles: File[], rejectReasons: []) => {
   console.log(acceptFiles);
   console.log(rejectReasons);
 
@@ -43,13 +43,9 @@ const onDrop = (acceptFiles, rejectReasons) => {
   reader.readAsText(state.files[0]);
 };
 
-const { getRootProps, getInputProps, isDragActive, ...rest } = useDropzone({
+const { getRootProps, getInputProps, isDragActive } = useDropzone({
   onDrop,
 });
-
-const handleClickDeleteFile = (index) => {
-  state.files.splice(index, 1);
-};
 </script>
 
 <style lang="scss" scoped>
