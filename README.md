@@ -1,18 +1,25 @@
-# Vue 3 + TypeScript + Vite
+# sentenCy
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+A web-based annotation tool designed for preparing text data for AI training, specifically for attaching custom named entities (*tagging words* in terms of the app).
 
-## Recommended IDE Setup
+Originally made to be used alon with [spaCy](https://spacy.io/).
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Usage
+Begin by loading or pasting your text data on the "Sources" page.
+Enter or import JSON tag data and optionally define hotkeys for more manual control.
+Annotate your text line by line by clicking or selecting words and tags.
+Open the prepared data as a CSV.
 
-## Type Support For `.vue` Imports in TS
+## Disclaimer
+This is a free and experimental tool, provided without any warranties.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+## Getting Started
+To run the project locally, follow these steps:
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+```sh
+yarn
+```
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+```sh
+yarn build
+```

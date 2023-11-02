@@ -4,12 +4,12 @@
     <p>
       This is a simple
       <app-tag hotkey="tool" text="annotation" is-active role="presentation" />
-      tool originally made for
+      originally made to work along with
       <a href="https://spacy.io/" target="_blank">spaCy</a>.
     </p>
     <p>
-      It allows loading of raw text data, tagging words in sentences (attaching
-      named entitites) and exporting it as CSV.
+      It allows for the loading of raw text data, tagging words in sentences
+      (attaching named entities), and exporting it as a CSV.
     </p>
     <p>Basically, it replaces excel tables and manual columns labeling.</p>
   </section>
@@ -17,15 +17,15 @@
   <section class="card">
     <h2><i class="fa fa-list-ul mr-2 text-dark-60"></i> Sources</h2>
     <p>
-      Begin with loading (or directly pasting) your text data at
-      <mark>sources</mark> page.
+      Begin by loading (or directly pasting) your text data on the
+      <mark>Sources</mark> page.
     </p>
   </section>
 
   <section class="card">
     <h2><i class="fa fa-tags mr-2 text-dark-60"></i> Tags</h2>
     <p>
-      You will have to enter (or import JSON) <mark>tags</mark> data and
+      You will have to enter (or import JSON) <mark>tag</mark> data and
       optionally define <mark>hotkeys</mark> if you prefer more manual control.
     </p>
   </section>
@@ -33,15 +33,15 @@
   <section class="card">
     <h2><i class="fa fa-edit mr-2 text-dark-60"></i> Annotation</h2>
     <p>
-      Here is the main part of this place: you annotate your text line by line
-      clicking or selecting words and tags.
+      Here is the main part of this tool: you annotate your text line by line by
+      clicking or selecting words and tags
     </p>
   </section>
 
   <section class="card">
     <h2><i class="fa fa-edit mr-2 text-dark-60"></i> Export</h2>
     <p>
-      Open prepared data as
+      Open the prepared data as a
       <a
         href="https://en.wikipedia.org/wiki/Comma-separated_values"
         target="_blank"
@@ -59,10 +59,10 @@
       <a href="https://en.wikipedia.org/wiki/Web_storage" target="_blank"
         >local storage</a
       >
-      with all it's pros and cons. One of the possible limitations is the size
-      of data you can save.
+      with all its pros and cons. One of the possible limitations is the size of
+      data you can save.
     </p>
-    <p>This is a free and experimental tool, no warranties.</p>
+    <p>This is a free and experimental tool with no warranties.</p>
   </section>
 </template>
 

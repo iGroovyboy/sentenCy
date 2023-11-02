@@ -65,11 +65,11 @@
     <aside class="help mt-6 text-dark-60 flex items-center gap-x-4">
       <i class="fa fa-question-circle fa-3x text-dark-70"></i>
       <div>
-        <p>Single click on a word to tag single word.</p>
+        <p>Single click on a word to tag it.</p>
         <p>Drag-select several words to tag them.</p>
         <p>
-          Click once on existing <mark class="bg-dark-50">mark</mark> to remove
-          it.
+          Click once on an existing <mark class="bg-dark-50">mark</mark> to
+          remove it.
         </p>
       </div>
     </aside>
