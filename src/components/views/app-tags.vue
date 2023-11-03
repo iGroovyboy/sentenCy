@@ -60,6 +60,7 @@
       </div>
     </div>
     <div
+      v-if="tags?.length"
       class="tags-list mt-4 p-4 flex flex-row flex-wrap gap-x-2 border border-dark-60/60"
       aria-label="List of tags"
       role="radiogroup"
@@ -75,6 +76,7 @@
       />
     </div>
     <app-btn-next
+      v-if="tags?.length"
       class="mt-2"
       :nextScreen="SCREEN.EDITOR"
       :disabled="!tags.length"

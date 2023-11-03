@@ -1,6 +1,12 @@
 <template>
   <h1>Tag content</h1>
-  <section class="card">
+  <section v-if="!isEditorAvailable" class="card">
+    <h2>No valid data</h2>
+    <p>Please, first load some text on the Sources page.</p>
+    <p>Then create some tags.</p>
+  </section>
+
+  <section v-if="isEditorAvailable" class="card">
     <h2>Progress</h2>
     <app-progress
       v-if="processedData?.length"
@@ -11,7 +17,7 @@
     />
   </section>
 
-  <section class="card" v-resizable.br>
+  <section v-if="isEditorAvailable" class="card" v-resizable.br>
     <h2>Assign tags</h2>
     <div class="border border border-dark-60/60">
       <div
@@ -78,7 +84,7 @@
 
 <script setup lang="ts">
 import AppTag from "@/components/app-tag.vue";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import AppBtn from "@/components/app-btn.vue";
 import { STORAGE_KEY } from "@/common/constants.ts";
 import {
@@ -112,6 +118,10 @@ const progressSkipped = ref(0);
 
 const isPrevLineAvailable = ref(false);
 const isNextLineAvailable = ref(false);
+
+const isEditorAvailable = computed(
+  () => !(isEmpty(data.value) && isEmpty(availableTags.value)),
+);
 
 watch(
   () => rowId.value,
@@ -218,7 +228,7 @@ const acceptLine = () => {
 };
 
 const isRowTagged = () =>
-  data.value.some((row: string | Record<string, unknown>) => isObject(row));
+  data.value?.some((row: string | Record<string, unknown>) => isObject(row));
 
 const saveRowAsSkipped = () => {
   const skippedArr = JSON.parse(
