@@ -36,7 +36,7 @@ const csvPrepareHeader = (): string[] => {
   return headerFields;
 };
 
-export const csvPrepareData = (): null | Array<string[]> => {
+const csvPrepareData = (): null | Array<string[]> => {
   const sourceDataRaw = localStorage.getItem(STORAGE_KEY.PROCESSED_SOURCE);
   const taggedDataRaw = localStorage.getItem(STORAGE_KEY.TAGGED_DATA);
 

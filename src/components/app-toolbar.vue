@@ -19,7 +19,7 @@
 import AppIconBtn from "./app-icon-btn.vue";
 import useMain from "@/store/use_main";
 import { SCREEN } from "@/common/screens.ts";
-import { csvExport } from "@/common/export.ts";
+import { csvExport } from "@/common/export_csv.ts";
 import { openWindowWithBlob } from "@/common/helpers.ts";
 
 const mainStore = useMain();

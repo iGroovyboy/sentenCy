@@ -14,4 +14,7 @@ export default defineConfig({
     ],
   },
   base: "/sentenCy/",
+  test: {
+    environment: "jsdom",
+  },
 });
