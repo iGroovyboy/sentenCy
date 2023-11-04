@@ -10,16 +10,15 @@
 </template>
 
 <script setup lang="ts">
-import useMain from "@/store/use_main";
 import { computed } from "vue";
 import AppBtn from "@/components/app-btn.vue";
+import { Route, router } from "@/common/router.ts";
 
 const props = defineProps<{
-  nextScreen: number;
+  nextScreen: Route;
   disabled?: boolean;
   text?: string;
 }>();
-const mainStore = useMain();
 
 const title = computed(() => props.text || "NEXT");
 
@@ -28,7 +27,7 @@ const action = () => {
     return;
   }
 
-  mainStore.setScreen(props.nextScreen);
+  router.push({ name: props.nextScreen });
 };
 </script>
 

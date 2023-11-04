@@ -15,17 +15,17 @@
   </section>
 
   <section class="card">
-    <h2><i class="fa fa-list-ul mr-2 text-dark-60"></i> Sources</h2>
+    <h2><i class="fa fa-list-ul mr-2 text-dark-60"></i> Source</h2>
     <p>
       Begin by loading (or directly pasting) your text data on the
-      <mark>Sources</mark> page.
+      <router-link :to="{ name: Route.Source }">Source</router-link> page.
     </p>
   </section>
 
   <section class="card">
     <h2><i class="fa fa-tags mr-2 text-dark-60"></i> Tags</h2>
     <p>
-      You will have to enter (or import JSON) <mark>tag</mark> data and
+      You will have to enter <mark>tag</mark> data (or import JSON) and
       optionally define <mark>hotkeys</mark> if you prefer more manual control.
     </p>
   </section>
@@ -34,7 +34,7 @@
     <h2><i class="fa fa-edit mr-2 text-dark-60"></i> Annotation</h2>
     <p>
       Here is the main part of this tool: you annotate your text line by line by
-      clicking or selecting words and tags
+      clicking or selecting words and tags.
     </p>
   </section>
 
@@ -68,6 +68,7 @@
 
 <script setup lang="ts">
 import AppTag from "@/components/app-tag.vue";
+import { Route } from "@/common/router.ts";
 </script>
 
 <style lang="scss" scoped>

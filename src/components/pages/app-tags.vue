@@ -78,7 +78,7 @@
     <app-btn-next
       v-if="tags?.length"
       class="mt-2"
-      :nextScreen="SCREEN.EDITOR"
+      :nextScreen="Route.Annotation"
       :disabled="!tags.length"
     />
   </section>
@@ -91,12 +91,12 @@ import AppTag from "@/components/app-tag.vue";
 import clone from "lodash/clone";
 import isEmpty from "lodash/isEmpty";
 import AppDropzone from "@/components/app-dropzone.vue";
-import { SCREEN } from "@/common/screens.ts";
 import AppBtnNext from "@/components/app-btn-next.vue";
 import { KEY_CODE, STORAGE_KEY } from "@/common/constants.ts";
 import AppDivider from "@/components/app-divider.vue";
 import { openWindowWithBlob } from "@/common/helpers.ts";
 import { Tag } from "@/common/interfaces.ts";
+import { Route } from "@/common/router.ts";
 
 const currentTag = reactive<Tag>({
   name: "",

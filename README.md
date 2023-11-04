@@ -16,10 +16,18 @@ This is a free and experimental tool, provided without any warranties.
 ## Getting Started
 To run the project locally, follow these steps:
 
+1. create copy of `.env.example` and rename it to `.env`
+```sh
+cp .env.example .env
+```
+
+
+2. install packages
 ```sh
 yarn
 ```
 
+3. build app
 ```sh
 yarn build
 ```
