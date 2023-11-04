@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "fork-awesome": "^1.2.0",
+    "localstorage-slim": "^2.7.0",
     "lodash": "^4.17.21",
     "papaparse": "^5.4.1",
     "pinia": "^2.1.7",

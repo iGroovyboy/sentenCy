@@ -5,6 +5,7 @@
     :aria-label="`Tag: ${text}, hotkey: ${hotkey}`"
     role="radio"
     @keyup="action"
+    @click="$emit('click')"
     tabindex="0"
   >
     <div class="text-base font-bold" v-text="text" />

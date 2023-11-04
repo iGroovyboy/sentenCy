@@ -97,6 +97,7 @@ import AppDivider from "@/components/app-divider.vue";
 import { openWindowWithBlob } from "@/common/helpers.ts";
 import { Tag } from "@/common/interfaces.ts";
 import { Route } from "@/common/router.ts";
+import storage from "localstorage-slim";
 
 const currentTag = reactive<Tag>({
   name: "",
@@ -135,7 +136,7 @@ const hotkeyChange = (e: KeyboardEvent) => {
 };
 
 const updateStorage = () => {
-  localStorage.setItem(STORAGE_KEY.TAGS, JSON.stringify(tags.value));
+  storage.set(STORAGE_KEY.TAGS, tags.value);
 };
 
 const deleteTag = (tag: Tag) => {
@@ -176,6 +177,7 @@ const add = () => {
 };
 
 const editTag = (tag: Tag) => {
+  console.log(">>>>");
   currentTag.name = tag.name;
   currentTag.hotkey = tag.hotkey;
 };
@@ -197,7 +199,7 @@ const importData = (content: string) => {
 };
 
 onMounted(() => {
-  tags.value = JSON.parse(localStorage.getItem(STORAGE_KEY.TAGS) || "[]");
+  tags.value = storage.get(STORAGE_KEY.TAGS) || [];
 });
 </script>
 

@@ -25,6 +25,7 @@ import { onMounted, ref } from "vue";
 import { STORAGE_KEY } from "@/common/constants.ts";
 import AppBtn from "@/components/app-btn.vue";
 import { Route } from "@/common/router.ts";
+import storage from "localstorage-slim";
 
 const data = ref("");
 
@@ -41,16 +42,13 @@ const prepareSourceData = (data: string): string[] => {
 };
 
 const updateData = () => {
-  localStorage.setItem(STORAGE_KEY.SOURCE, data.value);
+  storage.set(STORAGE_KEY.SOURCE, data.value);
 
-  localStorage.setItem(
-    STORAGE_KEY.PROCESSED_SOURCE,
-    JSON.stringify(prepareSourceData(data.value)),
-  );
+  storage.set(STORAGE_KEY.PROCESSED_SOURCE, prepareSourceData(data.value));
 };
 
 onMounted(() => {
-  data.value = localStorage.getItem(STORAGE_KEY.SOURCE) || "";
+  data.value = storage.get(STORAGE_KEY.SOURCE) || "";
 });
 </script>
 
