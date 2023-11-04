@@ -4,6 +4,8 @@ A web-based annotation tool designed for preparing text data for AI training, sp
 
 Originally made to be used alon with [spaCy](https://spacy.io/).
 
+Latest working build: https://igroovyboy.github.io/sentenCy/
+
 ## Usage
 Begin by loading or pasting your text data on the "Sources" page.
 Enter or import JSON tag data and optionally define hotkeys for more manual control.

@@ -22,7 +22,7 @@
     <div class="border border border-dark-60/60">
       <div
         v-if="availableTags?.length"
-        class="title-wrapper w-full flex flex-row flex-wrap space-x-2 p-4"
+        class="title-wrapper w-full flex flex-row flex-wrap gap-x-2 gap-y-2 p-4"
         aria-label="List of available tags"
         role="radiogroup"
       >
@@ -107,6 +107,7 @@ import isObject from "lodash/isObject";
 import AppTextWrapper from "@/components/editor/app-text-wrapper.vue";
 import AppProgress from "@/components/editor/app-progress.vue";
 import storage from "localstorage-slim";
+import { useHotkey } from "@/common/use_hotkey.ts";
 
 const currentTag = ref<Tag>({
   name: "",
@@ -325,6 +326,10 @@ const processSourceData = () => {
   }
 };
 
+const selectTag = (tag: Tag) => {
+  currentTag.value = tag;
+};
+
 onMounted(() => {
   availableTags.value = storage.get(STORAGE_KEY.TAGS) || [];
 
@@ -333,8 +338,9 @@ onMounted(() => {
     currentTag.value = availableTags.value[0];
   }
 
-  console.log("Current row id: " + rowId.value);
-  console.log("Data", data.value);
+  useHotkey(availableTags.value, (tag) => {
+    selectTag(tag);
+  });
 });
 </script>
 

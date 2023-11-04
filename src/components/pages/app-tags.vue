@@ -61,7 +61,7 @@
     </div>
     <div
       v-if="tags?.length"
-      class="tags-list mt-4 p-4 flex flex-row flex-wrap gap-x-2 border border-dark-60/60"
+      class="tags-list mt-4 p-4 flex flex-row flex-wrap gap-x-2 gap-y-2 border border-dark-60/60"
       aria-label="List of tags"
       role="radiogroup"
     >
@@ -73,6 +73,7 @@
         :text="tag.name"
         :hotkey="tag.hotkey"
         :is-active="currentTag.name === tag.name"
+        ref="tagElement"
       />
     </div>
     <app-btn-next
@@ -98,6 +99,7 @@ import { openWindowWithBlob } from "@/common/helpers.ts";
 import { Tag } from "@/common/interfaces.ts";
 import { Route } from "@/common/router.ts";
 import storage from "localstorage-slim";
+import { useHotkey } from "@/common/use_hotkey.ts";
 
 const currentTag = reactive<Tag>({
   name: "",
@@ -105,6 +107,7 @@ const currentTag = reactive<Tag>({
 });
 const tags = ref<any[]>([]);
 const tagInput = ref<null | HTMLInputElement>(null);
+const tagElement = ref(null);
 
 const isTagExists = computed(() => {
   return !isEmpty(
@@ -177,7 +180,6 @@ const add = () => {
 };
 
 const editTag = (tag: Tag) => {
-  console.log(">>>>");
   currentTag.name = tag.name;
   currentTag.hotkey = tag.hotkey;
 };
@@ -200,6 +202,7 @@ const importData = (content: string) => {
 
 onMounted(() => {
   tags.value = storage.get(STORAGE_KEY.TAGS) || [];
+  useHotkey(tags.value, editTag);
 });
 </script>
 
