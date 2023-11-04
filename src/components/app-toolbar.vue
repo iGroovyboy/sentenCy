@@ -7,9 +7,9 @@
     <app-icon-btn
       v-for="btn in buttons"
       :key="btn.name"
-      @click="btn.action ? btn.action() : mainStore.setScreen(btn.screen || 0)"
+      @click="btn.action ? btn.action() : router.push({ name: btn.route })"
       :icon-class="btn.icon"
-      :is-active="mainStore.screen === btn.screen"
+      :is-active="route.name === btn.route"
       :aria-label="btn.name"
     />
   </nav>
@@ -17,12 +17,12 @@
 
 <script setup lang="ts">
 import AppIconBtn from "./app-icon-btn.vue";
-import useMain from "@/store/use_main";
-import { SCREEN } from "@/common/screens.ts";
 import { csvExport } from "@/common/export_csv.ts";
 import { openWindowWithBlob } from "@/common/helpers.ts";
+import { Route, router } from "@/common/router.ts";
+import { useRoute } from "vue-router";
 
-const mainStore = useMain();
+const route = useRoute();
 
 const save = () => {
   const data = csvExport();
@@ -36,30 +36,30 @@ const save = () => {
 interface ToolbarButton {
   name: string;
   icon: string;
-  screen?: number;
-  action?(): any;
+  route?: Route;
+  action?(): unknown;
 }
 
 const buttons: ToolbarButton[] = [
   {
     name: "home",
     icon: "fa-home",
-    screen: SCREEN.HOME,
+    route: Route.Home,
   },
   {
-    name: "sources",
+    name: "source",
     icon: "fa-list-ul",
-    screen: SCREEN.SOURCES,
+    route: Route.Source,
   },
   {
     name: "tags",
     icon: "fa-tags",
-    screen: SCREEN.TAGS,
+    route: Route.Tags,
   },
   {
-    name: "editor",
+    name: "annotation",
     icon: "fa-pencil-square-o",
-    screen: SCREEN.EDITOR,
+    route: Route.Annotation,
   },
   {
     name: "download",

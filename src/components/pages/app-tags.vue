@@ -61,7 +61,7 @@
     </div>
     <div
       v-if="tags?.length"
-      class="tags-list mt-4 p-4 flex flex-row flex-wrap gap-x-2 border border-dark-60/60"
+      class="tags-list mt-4 p-4 flex flex-row flex-wrap gap-x-2 gap-y-2 border border-dark-60/60"
       aria-label="List of tags"
       role="radiogroup"
     >
@@ -73,12 +73,13 @@
         :text="tag.name"
         :hotkey="tag.hotkey"
         :is-active="currentTag.name === tag.name"
+        ref="tagElement"
       />
     </div>
     <app-btn-next
       v-if="tags?.length"
       class="mt-2"
-      :nextScreen="SCREEN.EDITOR"
+      :nextScreen="Route.Annotation"
       :disabled="!tags.length"
     />
   </section>
@@ -91,12 +92,14 @@ import AppTag from "@/components/app-tag.vue";
 import clone from "lodash/clone";
 import isEmpty from "lodash/isEmpty";
 import AppDropzone from "@/components/app-dropzone.vue";
-import { SCREEN } from "@/common/screens.ts";
 import AppBtnNext from "@/components/app-btn-next.vue";
 import { KEY_CODE, STORAGE_KEY } from "@/common/constants.ts";
 import AppDivider from "@/components/app-divider.vue";
 import { openWindowWithBlob } from "@/common/helpers.ts";
 import { Tag } from "@/common/interfaces.ts";
+import { Route } from "@/common/router.ts";
+import storage from "localstorage-slim";
+import { useHotkey } from "@/common/use_hotkey.ts";
 
 const currentTag = reactive<Tag>({
   name: "",
@@ -104,6 +107,7 @@ const currentTag = reactive<Tag>({
 });
 const tags = ref<any[]>([]);
 const tagInput = ref<null | HTMLInputElement>(null);
+const tagElement = ref(null);
 
 const isTagExists = computed(() => {
   return !isEmpty(
@@ -135,7 +139,7 @@ const hotkeyChange = (e: KeyboardEvent) => {
 };
 
 const updateStorage = () => {
-  localStorage.setItem(STORAGE_KEY.TAGS, JSON.stringify(tags.value));
+  storage.set(STORAGE_KEY.TAGS, tags.value);
 };
 
 const deleteTag = (tag: Tag) => {
@@ -197,7 +201,8 @@ const importData = (content: string) => {
 };
 
 onMounted(() => {
-  tags.value = JSON.parse(localStorage.getItem(STORAGE_KEY.TAGS) || "[]");
+  tags.value = storage.get(STORAGE_KEY.TAGS) || [];
+  useHotkey(tags.value, editTag);
 });
 </script>
 

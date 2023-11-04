@@ -22,7 +22,7 @@
     <div class="border border border-dark-60/60">
       <div
         v-if="availableTags?.length"
-        class="title-wrapper w-full flex flex-row flex-wrap space-x-2 p-4"
+        class="title-wrapper w-full flex flex-row flex-wrap gap-x-2 gap-y-2 p-4"
         aria-label="List of available tags"
         role="radiogroup"
       >
@@ -88,6 +88,8 @@ import { computed, onMounted, ref, watch } from "vue";
 import AppBtn from "@/components/app-btn.vue";
 import { STORAGE_KEY } from "@/common/constants.ts";
 import {
+  SkippedData,
+  StoredTaggedData,
   Tag,
   TaggedData,
   TaggedDataItem,
@@ -104,6 +106,8 @@ import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
 import AppTextWrapper from "@/components/editor/app-text-wrapper.vue";
 import AppProgress from "@/components/editor/app-progress.vue";
+import storage from "localstorage-slim";
+import { useHotkey } from "@/common/use_hotkey.ts";
 
 const currentTag = ref<Tag>({
   name: "",
@@ -133,13 +137,12 @@ watch(
       ? getArrNextKey(processedData, rowId.value) !== null
       : false;
 
-    progressDone.value =
-      Object.keys(
-        JSON.parse(localStorage.getItem(STORAGE_KEY.TAGGED_DATA) || "{}"),
-      )?.length || 0;
-    progressSkipped.value =
-      JSON.parse(localStorage.getItem(STORAGE_KEY.SKIPPED_DATA) || "{}")
-        ?.length || 0;
+    progressDone.value = storage.get(STORAGE_KEY.TAGGED_DATA)
+      ? Object.keys(storage.get(STORAGE_KEY.TAGGED_DATA)).length
+      : 0;
+    progressSkipped.value = storage.get(STORAGE_KEY.SKIPPED_DATA)
+      ? (storage.get(STORAGE_KEY.SKIPPED_DATA) as SkippedData).length
+      : 0;
   },
 );
 
@@ -218,11 +221,9 @@ const deleteTag = (e: number) => {
 };
 
 const acceptLine = () => {
-  const savedData = JSON.parse(
-    localStorage.getItem(STORAGE_KEY.TAGGED_DATA) || "{}",
-  );
+  const savedData = storage.get(STORAGE_KEY.TAGGED_DATA) || {};
   savedData[rowId.value] = data.value;
-  localStorage.setItem(STORAGE_KEY.TAGGED_DATA, JSON.stringify(savedData));
+  storage.set(STORAGE_KEY.TAGGED_DATA, savedData);
 
   editNextLine();
 };
@@ -231,15 +232,11 @@ const isRowTagged = () =>
   data.value?.some((row: string | Record<string, unknown>) => isObject(row));
 
 const saveRowAsSkipped = () => {
-  const skippedArr = JSON.parse(
-    localStorage.getItem(STORAGE_KEY.SKIPPED_DATA) || "[]",
-  );
+  const skippedArr: SkippedData = storage.get(STORAGE_KEY.SKIPPED_DATA) || [];
   skippedArr.push(rowId.value);
   const skippedData = [...new Set(skippedArr)];
 
-  console.log(">>skippedData", skippedData);
-
-  localStorage.setItem(STORAGE_KEY.SKIPPED_DATA, JSON.stringify(skippedData));
+  storage.set(STORAGE_KEY.SKIPPED_DATA, skippedData);
 };
 
 const editNextLine = () => {
@@ -254,7 +251,7 @@ const editNextLine = () => {
       const nextKey = getArrNextKey(processedData, rowId.value);
       if (nextKey) {
         rowId.value = getArrNextKey(processedData, rowId.value) || rowId.value;
-        localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value.toString());
+        storage.set(STORAGE_KEY.ROW_ID, rowId.value.toString());
 
         loadData();
       } else {
@@ -273,7 +270,7 @@ const editPrevLine = () => {
       const prevKey = getArrPrevKey(processedData, rowId.value);
       if (prevKey !== null && prevKey >= 0) {
         rowId.value = prevKey;
-        localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value.toString());
+        storage.set(STORAGE_KEY.ROW_ID, rowId.value.toString());
 
         loadData();
       } else {
@@ -290,9 +287,7 @@ const loadData = () => {
     data.value = processedData?.[rowId.value].split(" ") || [];
   }
 
-  const taggedData = JSON.parse(
-    localStorage.getItem(STORAGE_KEY.TAGGED_DATA) || "{}",
-  );
+  const taggedData = storage.get(STORAGE_KEY.TAGGED_DATA) || {};
   if (!isEmpty(taggedData[rowId.value])) {
     taggedData[rowId.value].forEach(
       (element: TaggedDataItem, index: number) => {
@@ -307,16 +302,13 @@ const loadData = () => {
 };
 
 const processSourceData = () => {
-  processedData = JSON.parse(
-    localStorage.getItem(STORAGE_KEY.PROCESSED_SOURCE) || "[]",
-  );
+  processedData = storage.get(STORAGE_KEY.PROCESSED_SOURCE) || [];
 
-  rowId.value = +(localStorage.getItem(STORAGE_KEY.ROW_ID) || 0);
-  localStorage.setItem(STORAGE_KEY.ROW_ID, rowId.value.toString());
+  rowId.value = +(storage.get(STORAGE_KEY.ROW_ID) || 0);
+  storage.set(STORAGE_KEY.ROW_ID, rowId.value.toString());
 
-  const taggedData = JSON.parse(
-    localStorage.getItem(STORAGE_KEY.TAGGED_DATA) || "{}",
-  );
+  const taggedData: StoredTaggedData =
+    storage.get(STORAGE_KEY.TAGGED_DATA) || {};
   if (!isEmpty(taggedData[rowId.value])) {
     taggedData[rowId.value].forEach(
       (element: TaggedDataItem, index: number) => {
@@ -334,17 +326,21 @@ const processSourceData = () => {
   }
 };
 
+const selectTag = (tag: Tag) => {
+  currentTag.value = tag;
+};
+
 onMounted(() => {
-  availableTags.value = JSON.parse(
-    localStorage.getItem(STORAGE_KEY.TAGS) || "[]",
-  );
+  availableTags.value = storage.get(STORAGE_KEY.TAGS) || [];
+
   data.value = processSourceData();
   if (availableTags.value?.length) {
     currentTag.value = availableTags.value[0];
   }
 
-  console.log("Current row id: " + rowId.value);
-  console.log("Data", data.value);
+  useHotkey(availableTags.value, (tag) => {
+    selectTag(tag);
+  });
 });
 </script>
 

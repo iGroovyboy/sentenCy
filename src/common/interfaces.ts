@@ -11,10 +11,12 @@ export interface TaggedGroup {
   text: string;
 }
 
-export type TaggedWord = TaggedGroup;
-
 export type TaggedWords = Record<number, TaggedGroup>;
 
 export type TaggedDataItem = TaggedGroup | Record<number, TaggedGroup> | string;
 
 export type TaggedData = Array<TaggedDataItem>;
+
+export type SkippedData = number[];
+
+export type StoredTaggedData = Record<string, TaggedData>;

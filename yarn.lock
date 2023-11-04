@@ -1035,6 +1035,11 @@ domexception@^4.0.0:
   dependencies:
     webidl-conversions "^7.0.0"
 
+dotenv@^16.3.1:
+  version "16.3.1"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.3.1.tgz#369034de7d7e5b120972693352a3bf112172cc3e"
+  integrity sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==
+
 draht@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/draht/-/draht-1.0.1.tgz#c4c8879923d2130dfa9c5930e956c85d62b1e975"
@@ -1878,6 +1883,11 @@ local-pkg@^0.4.3:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/local-pkg/-/local-pkg-0.4.3.tgz#0ff361ab3ae7f1c19113d9bb97b98b905dbc4963"
   integrity sha512-SFppqq5p42fe2qcZQqqEOiVRXl+WCP1MdT6k7BDEW1j++sp5fIY+/fdRQitvKgB5BrBcmrs5m/L0v2FrU5MY1g==
+
+localstorage-slim@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/localstorage-slim/-/localstorage-slim-2.7.0.tgz#a8313d1e95adfc6edb5b66ec8fe91233fe9d8fa7"
+  integrity sha512-velxCZhb0mODaD9noe4pu3+OYnMKC66itqDqHMRsVpXKAJYU2+cUX09KRxoZ/nlVwitVgjlG2BZSEaP6RPJmgw==
 
 lodash.includes@^4.3.0:
   version "4.3.0"
@@ -3154,6 +3164,13 @@ vue-demi@>=0.14.5:
   version "0.14.6"
   resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.14.6.tgz#dc706582851dc1cdc17a0054f4fec2eb6df74c92"
   integrity sha512-8QA7wrYSHKaYgUxDA5ZC24w+eHm3sYCbp0EzcDwKqN3p6HqtTCGR/GVsPyZW92unff4UlcSh++lmqDWN3ZIq4w==
+
+vue-router@4:
+  version "4.2.5"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.2.5.tgz#b9e3e08f1bd9ea363fdd173032620bc50cf0e98a"
+  integrity sha512-DIUpKcyg4+PTQKfFPX88UWhlagBEBEfJ5A8XDXRJLUnZOvcpMF8o/dnL90vpVkGaPbjvXazV/rC1qBKrZlFugw==
+  dependencies:
+    "@vue/devtools-api" "^6.5.0"
 
 vue-template-compiler@^2.7.14:
   version "2.7.15"

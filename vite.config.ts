@@ -1,6 +1,9 @@
 import { fileURLToPath, URL } from "url";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import dotenv from "dotenv";
+
+const env = dotenv.config().parsed;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,8 +16,8 @@ export default defineConfig({
       },
     ],
   },
-  base: "/sentenCy/",
-  test: {
-    environment: "jsdom",
-  },
+  base: env.VITE_BASE_URL,
+    test: {
+        environment: "jsdom",
+    },
 });

@@ -1,7 +1,8 @@
 import { SOURCE_TEXT_HEADER_NAME, STORAGE_KEY } from "@/common/constants.ts";
-import { Tag, TaggedGroup } from "@/common/interfaces.ts";
+import { StoredTaggedData, Tag, TaggedGroup } from "@/common/interfaces.ts";
 import isObject from "lodash/isObject";
 import { unparse } from "papaparse";
+import storage from "localstorage-slim";
 
 export const csvExport = () => {
   const headerFields = csvPrepareHeader();
@@ -23,41 +24,30 @@ export const csvExport = () => {
 const csvPrepareHeader = (): string[] => {
   const headerFields = [SOURCE_TEXT_HEADER_NAME];
 
-  const tagsRaw = localStorage.getItem(STORAGE_KEY.TAGS);
-  if (tagsRaw?.length) {
-    const tags: Tag[] = JSON.parse(tagsRaw);
-    if (tags.length) {
-      for (const tag of tags) {
-        headerFields.push(tag?.name?.toUpperCase());
-      }
+  const tags: Tag[] | null = storage.get(STORAGE_KEY.TAGS);
+  if (tags && tags.length) {
+    for (const tag of tags) {
+      headerFields.push(tag?.name?.toUpperCase());
     }
   }
 
   return headerFields;
 };
 
-const csvPrepareData = (): null | Array<string[]> => {
-  const sourceDataRaw = localStorage.getItem(STORAGE_KEY.PROCESSED_SOURCE);
-  const taggedDataRaw = localStorage.getItem(STORAGE_KEY.TAGGED_DATA);
+export const csvPrepareData = (): null | Array<string[]> => {
+    const sourceData: string[] | null = storage.get(STORAGE_KEY.PROCESSED_SOURCE);
+    const taggedData: StoredTaggedData | null = storage.get(
+        STORAGE_KEY.TAGGED_DATA,
+    );
 
-  if (!sourceDataRaw?.length) {
-    return null;
-  }
+    const headerFields = csvPrepareHeader();
 
-  const sourceData = JSON.parse(sourceDataRaw);
-  const taggedData = JSON.parse(taggedDataRaw || "{}");
+    const rows: Array<string[]> = [];
 
-  const headerFields = csvPrepareHeader();
-
-  console.clear();
-  console.log(headerFields);
-
-  const rows: Array<string[]> = [];
-
-  sourceData.forEach((sourceRow: string, id: number) => {
+  sourceData?.forEach((sourceRow: string, id: number) => {
     const row = [sourceRow];
     const availableTaggedData: Record<string, string> = {};
-    if (taggedData[id]) {
+    if (taggedData?.[id]) {
       for (const wordData of taggedData[id]) {
         if (isObject(wordData)) {
           if ("isSingle" in wordData && wordData.isSingle) {
