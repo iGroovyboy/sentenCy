@@ -35,14 +35,14 @@ const csvPrepareHeader = (): string[] => {
 };
 
 export const csvPrepareData = (): null | Array<string[]> => {
-    const sourceData: string[] | null = storage.get(STORAGE_KEY.PROCESSED_SOURCE);
-    const taggedData: StoredTaggedData | null = storage.get(
-        STORAGE_KEY.TAGGED_DATA,
-    );
+  const sourceData: string[] | null = storage.get(STORAGE_KEY.PROCESSED_SOURCE);
+  const taggedData: StoredTaggedData | null = storage.get(
+    STORAGE_KEY.TAGGED_DATA,
+  );
 
-    const headerFields = csvPrepareHeader();
+  const headerFields = csvPrepareHeader();
 
-    const rows: Array<string[]> = [];
+  const rows: Array<string[]> = [];
 
   sourceData?.forEach((sourceRow: string, id: number) => {
     const row = [sourceRow];

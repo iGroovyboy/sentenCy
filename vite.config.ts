@@ -17,7 +17,7 @@ export default defineConfig({
     ],
   },
   base: env.VITE_BASE_URL,
-    test: {
-        environment: "jsdom",
-    },
+  test: {
+    environment: "jsdom",
+  },
 });
