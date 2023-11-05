@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import AppIconBtn from "./app-icon-btn.vue";
-import { csvExport } from "@/common/export.ts";
+import { csvExport } from "@/common/export_csv.ts";
 import { openWindowWithBlob } from "@/common/helpers.ts";
 import { Route, router } from "@/common/router.ts";
 import { useRoute } from "vue-router";

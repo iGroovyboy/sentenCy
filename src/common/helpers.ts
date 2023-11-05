@@ -1,6 +1,6 @@
 import isEmpty from "lodash/isEmpty";
 
-export function jenkinsHash(str: string): number {
+export const jenkinsHash = (str: string): number => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash += str.charCodeAt(i);
@@ -12,7 +12,7 @@ export function jenkinsHash(str: string): number {
   hash += hash << 15;
 
   return hash >>> 0;
-}
+};
 
 export const extendSelectionToWord = () => {
   const selection = document.getSelection();
@@ -64,17 +64,6 @@ export const incrStringVersion = (input: string) => {
 
   return `${input}_0`;
 };
-
-// export const getNextItem = (map, prevKey) => {
-//   const entries = Array.from(map.entries());
-//   const prevIndex = entries.findIndex(([key, value]) => key === prevKey);
-//
-//   if (prevIndex !== -1 && prevIndex < entries.length - 1) {
-//     return entries[prevIndex + 1];
-//   }
-//
-//   return null; // Return null if there is no next item
-// };
 
 export const getArrNextKey = (
   arr: string[],
