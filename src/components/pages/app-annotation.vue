@@ -138,7 +138,7 @@ watch(
       : false;
 
     progressDone.value = storage.get(STORAGE_KEY.TAGGED_DATA)
-      ? Object.keys(storage.get(STORAGE_KEY.TAGGED_DATA)).length
+      ? Object.keys(storage.get(STORAGE_KEY.TAGGED_DATA) || {}).length
       : 0;
     progressSkipped.value = storage.get(STORAGE_KEY.SKIPPED_DATA)
       ? (storage.get(STORAGE_KEY.SKIPPED_DATA) as SkippedData).length
@@ -221,7 +221,8 @@ const deleteTag = (e: number) => {
 };
 
 const acceptLine = () => {
-  const savedData = storage.get(STORAGE_KEY.TAGGED_DATA) || {};
+  const savedData: StoredTaggedData =
+    storage.get(STORAGE_KEY.TAGGED_DATA) || {};
   savedData[rowId.value] = data.value;
   storage.set(STORAGE_KEY.TAGGED_DATA, savedData);
 
@@ -287,7 +288,8 @@ const loadData = () => {
     data.value = processedData?.[rowId.value].split(" ") || [];
   }
 
-  const taggedData = storage.get(STORAGE_KEY.TAGGED_DATA) || {};
+  const taggedData: StoredTaggedData =
+    storage.get(STORAGE_KEY.TAGGED_DATA) || {};
   if (!isEmpty(taggedData[rowId.value])) {
     taggedData[rowId.value].forEach(
       (element: TaggedDataItem, index: number) => {
@@ -333,12 +335,12 @@ const selectTag = (tag: Tag) => {
 onMounted(() => {
   availableTags.value = storage.get(STORAGE_KEY.TAGS) || [];
 
-  data.value = processSourceData();
+  data.value = processSourceData() || [];
   if (availableTags.value?.length) {
     currentTag.value = availableTags.value[0];
   }
 
-  useHotkey(availableTags.value, (tag) => {
+  useHotkey(availableTags.value, (tag: Tag) => {
     selectTag(tag);
   });
 });

@@ -1,15 +1,14 @@
-import { onMounted, onBeforeUnmount } from "vue";
+import { onBeforeUnmount } from "vue";
 import { Tag } from "@/common/interfaces.ts";
+import { isFunction } from "lodash";
 
-type Func = (tag: any) => {};
-
-export const useHotkey = (tags: Tag[] | [], callback: Func) => {
-  const handleKeyDown = (event) => {
+export const useHotkey = (tags: Tag[] | [], callback: unknown) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
     const tag = tags.find(
       (t) => t.hotkey?.toLowerCase() === event?.key?.toLowerCase(),
     );
 
-    if (tag) {
+    if (tag && isFunction(callback)) {
       callback(tag);
     }
   };
