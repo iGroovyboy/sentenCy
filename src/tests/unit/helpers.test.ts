@@ -34,9 +34,10 @@ describe("helpers.ts tests", () => {
     const keyTwo = getArrNextKey(arr, currentKey);
 
     expect(keyTwo).toBe(2);
+    // @ts-ignore
     expect(arr[keyTwo]).toBe("two");
 
-    const keyNull = getArrNextKey(arr, keyTwo);
+    const keyNull = getArrNextKey(arr, keyTwo!);
     expect(keyNull).toBe(null);
   });
 
@@ -46,8 +47,10 @@ describe("helpers.ts tests", () => {
     const keyZero = getArrPrevKey(arr, currentKey);
 
     expect(keyZero).toBe(0);
+    // @ts-ignore
     expect(arr[keyZero]).toBe("zero");
 
+    // @ts-ignore
     const keyNull = getArrPrevKey(arr, keyZero);
     expect(keyNull).toBe(null);
   });

@@ -9,7 +9,7 @@ describe("export_csv.ts tests", () => {
   });
 
   const populateTestData = () => {
-    const tags: Tag = [
+    const tags: Tag[] = [
       { name: "Noun", hotkey: "" },
       { name: "Custom_selection", hotkey: "" },
     ];
@@ -98,6 +98,6 @@ I have a dream.,,`;
 
   test("csvExport: populated localStorage returns CSV", async () => {
     const response = populateTestData().replace(/\r\n/g, "\n");
-    expect(csvExport().replace(/\r\n/g, "\n")).toStrictEqual(response);
+    expect(csvExport()?.replace(/\r\n/g, "\n")).toStrictEqual(response);
   });
 });

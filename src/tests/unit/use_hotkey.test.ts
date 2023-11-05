@@ -31,7 +31,7 @@ describe("should mock console.log", () => {
 
     const fakeComponent = {
       setup() {
-        useHotkey(tags, (tag) => {
+        useHotkey(tags, (tag: Tag) => {
           console.log(tag.name);
         });
       },
